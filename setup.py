@@ -16,7 +16,7 @@
 import sys
 from setuptools import setup, find_packages
 
-requires = ['slave', 'fasteners']
+requires = ['slave', 'e21_util']
 
 desc = ('Util library')
 
