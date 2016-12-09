@@ -17,4 +17,4 @@ import fasteners
 
 class InterProcessTransportLock(fasteners.InterProcessLock):
     def __init__(self, transport, *args, **kwargs):
-        super(InterProcessTransportLock, self).__init__(transport.get_name(), *args, **kwargs)
+        super(InterProcessTransportLock, self).__init__("/media/ramdisk" + transport.get_name(), *args, **kwargs)
