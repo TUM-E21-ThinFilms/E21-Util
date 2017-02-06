@@ -26,7 +26,7 @@ class TemperaturePressureLogParser(object):
 
         splitted = line.split(";")
 
-        if not len(splitted) >= 7:
+        if not len(splitted) >= 6:
             return None
 
         return splitted
