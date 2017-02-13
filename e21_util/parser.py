@@ -32,4 +32,8 @@ class TemperaturePressureLogParser(object):
         if not len(splitted) >= 6:
             return None
 
+        # if any element is empty, throw away all..
+        if all(map(bool, ar)):
+            return None
+
         return splitted
