@@ -18,6 +18,9 @@ class TemperaturePressureLogParser(object):
         if line.startswith('Starting measurement'):
             return None
 
+        if line.startswith('Stopping'):
+            return None
+
         if line.startswith('Time;'):
             return None
 
