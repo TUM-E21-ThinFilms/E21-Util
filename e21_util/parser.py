@@ -33,7 +33,7 @@ class TemperaturePressureLogParser(object):
             return None
 
         # if any element is empty, throw away all..
-        if not all(map(bool, ar)):
+        if not all(map(bool, line)):
             return None
 
         return splitted
