@@ -39,6 +39,7 @@ class GunConfigParser(object):
         config.set_tolerance(configparser.getint(self.SECTION, 'tolerance'))
         config.set_difference(configparser.getint(self.SECTION, 'gun_difference'))
         config.set_absolute_gun_position(configparser.getint(self.SECTION, 'gun_1'))
+        return config
 
     def write_config(self, config):
         configparser = ConfigParser.RawConfigParser()
