@@ -49,7 +49,7 @@ class GunConfigParser(object):
         configparser.set(self.SECTION, 'gun_difference', config.get_difference())
         configparser.set(self.SECTION, 'gun_1', config.get_absolute_gun_position())
 
-        with open(self._file, 'wb') as file:
+        with open(self._file, 'wb+') as file:
             configparser.write(file)
 
 
@@ -118,5 +118,5 @@ class GunSelectionConfigParser(object):
             configparser.set(self.SECTION, 'gun_' + str(i) + '_sputter', config.get_gun_sputter(i))
             configparser.set(self.SECTION, 'gun_' + str(i) + '_target', config.get_gun_target(i))
 
-        with open(self._file, 'wb') as file:
+        with open(self._file, 'wb+') as file:
             configparser.write(file)
