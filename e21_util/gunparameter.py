@@ -87,6 +87,8 @@ class GunSelectionConfig(object):
 
     def set_gun_number(self, number):
         self.gun_number = number
+        self.gun_sputter = number*[0]
+        self.gun_target = number*[""]
 
 
 class GunSelectionConfigParser(object):
