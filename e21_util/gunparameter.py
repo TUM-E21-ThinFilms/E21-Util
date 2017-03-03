@@ -105,8 +105,8 @@ class GunSelectionConfigParser(object):
         config.set_gun_number(configparser.getint(self.SECTION, 'gun_number'))
 
         for i in range(1, config.get_gun_number()):
-            config.set_gun_sputter(i, configparser.getint(self.SECTION, 'gun_' + i + '_sputter'))
-            config.set_gun_target(i, configparser.get(self.SECTION, 'gun_' + i + '_target'))
+            config.set_gun_sputter(i, configparser.getint(self.SECTION, 'gun_' + str(i) + '_sputter'))
+            config.set_gun_target(i, configparser.get(self.SECTION, 'gun_' + str(i) + '_target'))
 
         return config
 
@@ -115,8 +115,8 @@ class GunSelectionConfigParser(object):
         configparser.add_section(self.SECTION)
 
         for i in range(1, config.get_gun_number()):
-            configparser.set(self.SECTION, 'gun_' + i + '_sputter', config.get_gun_sputter(i))
-            configparser.set(self.SECTION, 'gun_' + i + '_target', config.get_gun_target(i))
+            configparser.set(self.SECTION, 'gun_' + str(i) + '_sputter', config.get_gun_sputter(i))
+            configparser.set(self.SECTION, 'gun_' + str(i) + '_target', config.get_gun_target(i))
 
         with open(self._file, 'wb') as file:
             configparser.write(file)
