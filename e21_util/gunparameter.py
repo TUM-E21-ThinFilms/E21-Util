@@ -104,7 +104,7 @@ class GunSelectionConfigParser(object):
         config = GunSelectionConfig()
         config.set_gun_number(configparser.getint(self.SECTION, 'gun_number'))
 
-        for i in range(1, config.get_gun_number()):
+        for i in range(1, config.get_gun_number()+1):
             config.set_gun_sputter(i, configparser.getint(self.SECTION, 'gun_' + str(i) + '_sputter'))
             config.set_gun_target(i, configparser.get(self.SECTION, 'gun_' + str(i) + '_target'))
 
@@ -114,7 +114,7 @@ class GunSelectionConfigParser(object):
         configparser = ConfigParser.RawConfigParser()
         configparser.add_section(self.SECTION)
         configparser.set(self.SECTION, 'gun_number', config.get_gun_number())
-        for i in range(1, config.get_gun_number()):
+        for i in range(1, config.get_gun_number()+1):
             configparser.set(self.SECTION, 'gun_' + str(i) + '_sputter', config.get_gun_sputter(i))
             configparser.set(self.SECTION, 'gun_' + str(i) + '_target', config.get_gun_target(i))
 
