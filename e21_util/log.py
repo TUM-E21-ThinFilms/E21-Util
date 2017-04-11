@@ -24,10 +24,10 @@ class SputterFileHandler(WatchedFileHandler):
 
 def get_sputter_logger(name, filename):
     logger = logging.getLogger(name)
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(log.DEBUG)
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     fh = SputterFileHandler(filename)
-    fh.setLevel(logging.DEBUG)
+    fh.setLevel(log.DEBUG)
     fh.setFormatter(formatter)
     logger.addHandler(fh)
     return logger
