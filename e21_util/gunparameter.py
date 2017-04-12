@@ -94,7 +94,12 @@ class GunSelectionConfig(object):
 class GunSelectionConfigParser(object):
     SECTION = 'GUN_SELECTION'
 
-    def __init__(self, config_file):
+    DEFAULT_CONFIG_FILE = "/home/sputter/Python/lib/config/gun_selection.conf"
+
+    def __init__(self, config_file=None):
+        if config_file is None:
+            config_file = self.DEFAULT_CONFIG_FILE
+
         self._file = config_file
 
     def get_config(self):
