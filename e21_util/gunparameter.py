@@ -54,11 +54,27 @@ class GunConfigParser(object):
 
 
 class GunSelectionConfig(object):
+
+    SPUTTER_DEVICE_ADL_A = 0
+    SPUTTER_DEVICE_ADL_B = 1
+    SPUTTER_DEVICE_TRUMPF_DC = 2
+    SPUTTER_DEVICE_TRUMPF_RF = 3
+    SPUTTER_DEVICE_NONE = 4
+
     def __init__(self):
         self.gun_sputter = []
         self.gun_target = []
         self.gun_number = 0
 
+    """
+     :return Returns the sputter device which is located at gun number gun_number
+     Note that his returns a number (not a string) which can be associated to the
+     sputter power supplies:
+     0: ADL - A
+     1: ADL - B
+     2: Trump DC
+     3: Trumpf RF
+    """
     def get_gun_sputter(self, gun_number):
         self._validate_gun_number(gun_number)
         return self.gun_sputter[gun_number]
@@ -66,7 +82,9 @@ class GunSelectionConfig(object):
     def set_gun_sputter(self, gun_number, sputter):
         self._validate_gun_number(gun_number)
         self.gun_sputter[gun_number] = sputter
-
+    """
+     :return Returns the name of the material which is at gun position gun_number (as string)
+    """
     def get_gun_target(self, gun_number):
         self._validate_gun_number(gun_number)
         return self.gun_target[gun_number]
