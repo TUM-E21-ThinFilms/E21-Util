@@ -36,7 +36,7 @@ class SputterProcess(object):
         self._timer = timer
         self.create_logger()
 
-    def drivers(self, gun, vat_ar, vat_o2, adl_a, adl_b, trumpfrf, shutter, julabo, gauge):
+    def drivers(self, gun, vat_ar, vat_o2, adl_a, adl_b, trumpfrf, shutter, julabo, gauge, lakeshore):
         self._gun = gun
         self._vat_ar = vat_ar
         self._vat_o2 = vat_o2
@@ -46,6 +46,7 @@ class SputterProcess(object):
         self._julabo = julabo
         self._gauge = gauge
         self._shutter = shutter
+        self._lakeshore = lakeshore
 
         self._check_drivers()
 
@@ -58,6 +59,7 @@ class SputterProcess(object):
         assert isinstance(self._trumpfrf, TrumpfPFG600Controller)
         assert isinstance(self._julabo, JulaboController)
         assert isinstance(self._shutter, ShutterController)
+        assert isinstance(self._lakeshore, LakeshoreController)
         assert isinstance(self._gauge, PfeifferTPG26xDriver)  # TODO: might be changed to a GaugeController?
 
     def create_logger(self):
@@ -305,10 +307,16 @@ class SputterProcess(object):
         self._logger.info("--> Sputter process: Waiting 5 seconds to stabilize the sputter power")
         self._timer.sleep(5)
         try:
-            self._logger.info("--> Sputter process: current pressure %s (mbar)",
+            self._logger.info("--> Sputter process: Current pressure %s (mbar)",
                               self._gauge.get_pressure_measurement()[1])
         except:
-            self._logger.info("--> Sputter process: current pressure unknown")
+            self._logger.info("--> Sputter process: Current pressure unknown")
+
+        try:
+            self._logger.info("--> Sputter process: Current temperature %s K at position C", self._lakeshore.get_temperature('C'))
+        except:
+            self._logger.info("--> Sputter process: Could not determine temperature")
+
         self._logger.info("--> Sputter process: Opening shutter now %s", datetime.datetime.now())
         self._shutter.timer(sputter_time)
         self._logger.info("--> Sputter process: Shutter closed %s", datetime.datetime.now())
@@ -351,6 +359,7 @@ class SputterProcess(object):
         self._logger.info("--> Ignition parameter: Using ignition pressure %s (mbar)", ignition_pressure)
         self._logger.info("--> Ignition parameter: Using ignition power %s (Watt)", pre_power)
         self._logger.info("--> Ignition parameter: Using ignition timer %s (seconds)", ignition_time)
+        self._logger.info("--> Ignition process: Base pressure at %s mbar", self._gauge.get_pressure_measurement()[1])
         self._logger.info("--> Ignition process: Setting pressure and waiting 15 seconds")
         valve.set_pressure(ignition_pressure)
         self._timer.sleep(15)
