@@ -15,6 +15,7 @@ from devcontroller.adl import ADLController
 from devcontroller.trumpfrf import TrumpfPFG600Controller
 from devcontroller.julabo import JulaboController
 from devcontroller.shutter import ShutterController
+from devcontroller.lakeshore import LakeshoreController
 from tpg26x.driver import PfeifferTPG26xDriver
 
 class FakeTimer(object):
@@ -37,6 +38,7 @@ class TestSputterProcess(unittest.TestCase):
         julabo = Mock(JulaboController)
         shutter = Mock(ShutterController)
         gauge = Mock(PfeifferTPG26xDriver)
+        lakeshore = Mock(LakeshoreController)
 
         gun.get_gun.return_value = 2
         gauge.get_pressure_measurement.return_value=["Data Okay", 5e-5]
@@ -44,13 +46,15 @@ class TestSputterProcess(unittest.TestCase):
         adl_b.get_voltage.return_value = 40
         adl_b.get_power.return_value = 20
 
+        lakeshore.get_temperature.return_value = 395
+
         logmsg = ""
         logger = logging.getLogger("test")
         logger.setLevel(logging.DEBUG)
         logger.addHandler(logging.handlers.MemoryHandler(1, target=logmsg))
         logger.addHandler(logging.StreamHandler())
         process = SputterProcess('test_variables', configparser=GunSelectionConfigParser("gun_selection.conf"), logger=logger, timer=FakeTimer())
-        process.drivers(gun, vat_ar, vat_o2, adl_a, adl_b, trumpfrf, shutter, julabo, gauge)
+        process.drivers(gun, vat_ar, vat_o2, adl_a, adl_b, trumpfrf, shutter, julabo, gauge, lakeshore)
 
         self.assertEqual(vat_ar, process.find_leak_valve('ar'))
         self.assertEqual(vat_ar, process.find_leak_valve('AR'))

@@ -12,6 +12,7 @@ from devcontroller.adl import ADLController
 from devcontroller.trumpfrf import TrumpfPFG600Controller
 from devcontroller.julabo import JulaboController
 from devcontroller.shutter import ShutterController
+from devcontroller.lakeshore import LakeshoreController
 from tpg26x.driver import PfeifferTPG26xDriver
 
 
@@ -167,7 +168,6 @@ class SputterProcess(object):
             self._timer = timer
             super(SputterProcess.PlasmaChecker, self).__init__()
 
-
         def on(self):
             self.daemon = True
             self._logger.info("Turning plasma checker on")
@@ -215,7 +215,7 @@ class SputterProcess(object):
                 self._logger.warning("Exception while checking plasma ignition.")
                 self._logger.exception(e)
 
-            self._timer.sleep(1)
+            self._timer.sleep(10)
 
     def _check_parameters(self, pressure, sputter_time, ignition_pressure, pre_power, pre_time, power):
         pass
@@ -245,7 +245,7 @@ class SputterProcess(object):
         self._check_parameters(pressure, sputter_time, ignition_pressure, pre_power, pre_time, power)
         self._check_drivers()
 
-        self._logger.info("Sputter process: Ignition process: ")
+        #self._logger.info("Sputter process: Ignition process: ")
         self._logger.info(
             "Sputtering process started. Using material %s @ (%s Watt, %s mbar) for %s seconds",
             material, power, pressure, sputter_time)
@@ -316,6 +316,7 @@ class SputterProcess(object):
             self._logger.info("--> Sputter process: Current temperature %s K at position C", self._lakeshore.get_temperature('C'))
         except:
             self._logger.info("--> Sputter process: Could not determine temperature")
+
 
         self._logger.info("--> Sputter process: Opening shutter now %s", datetime.datetime.now())
         self._shutter.timer(sputter_time)
