@@ -25,6 +25,10 @@ class SputterProcess(object):
     GUN_CHANGING_ITERATIONS = 22  # number of iterations
     GUN_CHANGING_WAIT_TIME = 15  # seconds
 
+    GAS_TYPE_UNK = -1
+    GAS_TYPE_AR = 0
+    GAS_TYPE_O2 = 1
+
     def __init__(self, process_name, timer=None, configparser = None, logger=None):
         self._name = process_name
         self._logger = logger
@@ -35,6 +39,7 @@ class SputterProcess(object):
         if timer is None:
             timer = time
         self._timer = timer
+        self._leak_valve_type = None
         self.create_logger()
 
     def drivers(self, gun, vat_ar, vat_o2, adl_a, adl_b, trumpfrf, shutter, julabo, gauge, lakeshore):
@@ -138,9 +143,11 @@ class SputterProcess(object):
     def find_leak_valve(self, gas_name):
         if gas_name.lower() == 'ar':
             self._logger.info("Selected argon as gas")
+            self._leak_valve_type = self.GAS_TYPE_AR
             return self._vat_ar
         elif gas_name.lower() == 'o2':
             self._logger.info("Selected oxygen as gas")
+            self._leak_valve_type = self.GAS_TYPE_O2
             return self._vat_o2
         else:
             self._logger.warning("Unknown gas type")
@@ -364,6 +371,11 @@ class SputterProcess(object):
         self._logger.info("--> Ignition process: Setting pressure and waiting 15 seconds")
         valve.set_pressure(ignition_pressure)
         self._timer.sleep(15)
+
+        if self._leak_valve_type == self.GAS_TYPE_O2:
+            self._logger.info("--> Ignition process: Waiting 5 minutes for the correct O_2 ratio")
+            self._timer.sleep(300)
+
         self._logger.info("--> Ignition process: Starting pre-sputtering with pressure %s",
                           self._gauge.get_pressure_measurement()[1])
         self._logger.info("--> Ignition process: Turning sputter device on")
