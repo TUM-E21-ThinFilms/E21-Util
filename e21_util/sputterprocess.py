@@ -41,6 +41,8 @@ class SputterProcess(object):
         self._timer = timer
         self._leak_valve_type = None
         self.create_logger()
+        self._reignition_count = 0
+        self._reignition_threshold = 3
 
     def drivers(self, gun, vat_ar, vat_o2, adl_a, adl_b, trumpfrf, shutter, julabo, gauge, lakeshore):
         self._gun = gun
@@ -173,6 +175,8 @@ class SputterProcess(object):
             self._device = sputter_device
             self._logger = logger
             self._timer = timer
+            self._reignite_count = 0
+            self._reignite_threshold = 5
             super(SputterProcess.PlasmaChecker, self).__init__()
 
         def on(self):
@@ -189,40 +193,65 @@ class SputterProcess(object):
 
         def do_execute(self):
             try:
-                if isinstance(self._device, ADLController):
-                    voltage = self._device.get_voltage()
-                    if voltage > 900:
-                        self._logger.warning("Voltage at %s V. Probably no ignition")
-                    else:
-                        try:
-                            power = self._device.get_power()
-                        except:
-                            power = "Unk."
+                if not self.check():
+                    self._reignite()
 
-                        self._logger.info("### --> Plasma Checker: ADL: %s Volt at %s Watt", voltage, power)
-
-                elif isinstance(self._device, TrumpfPFG600Controller):
-                    power_forward, power_backward = float(self._device.get_power_forward()), float(
-                        self._device.get_power_backward())
-
-                    if power_forward > 0.01 and power_backward / power_forward > 0.5:
-                        self._logger.warning("Power backward/Power forward = %s/%s > 0.5. Probably no ignition",
-                                             power_backward, power_forward)
-                    else:
-                        try:
-                            voltage = self._device.get_voltage()
-                        except:
-                            voltage = "Unk."
-
-                        self._logger.info("### --> Plasma Checker: TrumpfRF: %s Volt at %s Watt", voltage, power_backward)
-                else:
-                    self._logger.error("Unknown sputter device.")
-                    self.off()
             except BaseException as e:
                 self._logger.warning("Exception while checking plasma ignition.")
                 self._logger.exception(e)
 
             self._timer.sleep(10)
+
+        def check(self):
+            if isinstance(self._device, ADLController):
+                voltage = self._device.get_voltage()
+                if voltage > 900:
+                    self._logger.warning("Voltage at %s V. Probably no ignition")
+                    return False
+                else:
+                    try:
+                        power = self._device.get_power()
+                    except:
+                        power = "Unk."
+
+                    self._logger.info("### --> Plasma Checker: ADL: %s Volt at %s Watt", voltage, power)
+                    return True
+
+            elif isinstance(self._device, TrumpfPFG600Controller):
+                power_forward, power_backward = float(self._device.get_power_forward()), float(
+                    self._device.get_power_backward())
+
+                if power_forward > 0.01 and power_backward / power_forward > 0.5:
+                    self._logger.warning("Power backward/Power forward = %s/%s > 0.5. Probably no ignition",
+                                         power_backward, power_forward)
+                    return False
+                else:
+                    try:
+                        voltage = self._device.get_voltage()
+                    except:
+                        voltage = "Unk."
+
+                    self._logger.info("### --> Plasma Checker: TrumpfRF: %s Volt at %s Watt", voltage, power_backward)
+                    return True
+            else:
+                self._logger.error("Unknown sputter device.")
+                self.off()
+                return False
+
+        def _reignite(self):
+            self._reignite_count += 1
+
+            if self._reignite_count > self._reignite_threshold:
+                self._do_reignition = True
+                self._reignite_count = 0
+
+        def reset_reignition_counter(self):
+            self._reignite_count = 0
+            self._do_reignition = False
+
+        def check_for_reignition(self):
+            return self._do_reignition
+
 
     def _check_parameters(self, pressure, sputter_time, ignition_pressure, pre_power, pre_time, power):
         pass
@@ -274,7 +303,7 @@ class SputterProcess(object):
 
             self._sputter_ignition(ignition_pressure, pre_power, sputter, valve)
             plasma_checker.on()
-            self._sputter_presputter(pre_power, pre_time, pressure, valve)
+            self._sputter_presputter(pre_power, pre_time, pressure, valve, ignition_pressure, sputter, plasma_checker)
             self._sputter_dosputter(power, pressure, sputter, sputter_time)
             plasma_checker.off()
             self._turn_off(sputter, valve)
@@ -348,7 +377,7 @@ class SputterProcess(object):
                 else:
                     self._logger.info("Could not set sputter power. Retry %s of %s", (i + 1), retries)
 
-    def _sputter_presputter(self, pre_power, pre_time, pressure, valve):
+    def _sputter_presputter(self, pre_power, pre_time, pressure, valve, ignition_pressure, sputter, plasma_checker):
         self._logger.info("Pre-sputter process started")
         self._logger.info("--> Pre-sputter parameter: Using pressure %s (mbar)", pressure)
         self._logger.info("--> Pre-sputter parameter: Using power %s (Watt)", pre_power)
@@ -356,11 +385,16 @@ class SputterProcess(object):
         self._logger.info("--> Pre-sputter process: Setting pressure")
         valve.set_pressure(pressure)
         self._logger.info("--> Pre-sputter process: Waiting %s minutes, %s", pre_time, datetime.datetime.now())
-        self._timer.sleep(pre_time * 60)
+
+        # waits in total pre_time * 6 * 10 seconds = pre_time minutes
+        for i in range(0, pre_time * 6):
+            self._timer.sleep(10)
+            self._do_reignite(ignition_pressure, pressure, pre_power, sputter, valve, plasma_checker)
+
         self._logger.info("--> Pre-sputter process: Finished pre-sputtering")
         self._logger.info("Pre-sputter process finished")
 
-    def _sputter_ignition(self, ignition_pressure, pre_power, sputter, valve):
+    def _sputter_ignition(self, ignition_pressure, pre_power, sputter, valve, ignition_wait_time = 300):
         ignition_time = 5
 
         self._logger.info("Ignition process started")
@@ -372,9 +406,9 @@ class SputterProcess(object):
         valve.set_pressure(ignition_pressure)
         self._timer.sleep(15)
 
-        if self._leak_valve_type == self.GAS_TYPE_O2:
-            self._logger.info("--> Ignition process: Waiting 5 minutes for the correct O_2 ratio")
-            self._timer.sleep(300)
+        if self._leak_valve_type == self.GAS_TYPE_O2 and ignition_wait_time > 0:
+            self._logger.info("--> Ignition process: Waiting "+str(ignition_wait_time)+" seconds for the correct O_2 ratio")
+            self._timer.sleep(ignition_wait_time)
 
         self._logger.info("--> Ignition process: Starting pre-sputtering with pressure %s",
                           self._gauge.get_pressure_measurement()[1])
@@ -383,6 +417,60 @@ class SputterProcess(object):
         self._logger.info("--> Ignition process: Sputter device turned on. Waiting for ignition timer")
         self._timer.sleep(ignition_time)
         self._logger.info("Ignition process finished")
+
+    def _do_reignite(self, ignition_pressure, sputter_pressure, pre_power, sputter, valve, plasma_checker):
+
+        if not plasma_checker.check_for_reignition():
+            return True
+
+        self._reignition_count += 1
+
+        if self._reignition_count > self._reignition_threshold:
+            self._logger.error("Aborting after %s reignition cycles", self._reignition_threshold)
+            raise RuntimeError("Could not reignite sputter process")
+
+        self._logger.info("Starting to reignite plasma. Current reignition counter %s of %s", self._reignition_count,
+                          self._reignition_threshold)
+
+        result = self._reignition_process(ignition_pressure, sputter_pressure, pre_power, sputter, valve, plasma_checker)
+
+        if not result:
+            self._do_reignite()
+        else:
+            plasma_checker.reset_reignition_counter()
+
+    def _reignition_process(self, ignition_pressure, sputter_pressure, pre_power, sputter, valve, plasma_checker):
+
+        self._logger.info("Reignition process started")
+        self._logger.info("--> Reignition process: Turn of sputter power supply")
+        sputter.off()
+        self._logger.info("--> Reignition process: Setting ignition pressure % (mbar)", ignition_pressure)
+        valve.set_pressure(ignition_pressure)
+        self._timer.sleep(5)
+        self._logger.info("--> Reignition process: Turn on sputter power supply at %s (Watt)", pre_power)
+        sputter.power(pre_power)
+        sputter.on()
+        self._logger.info("--> Reignition process: Checking plasma in 5 seconds...")
+        self._timer.sleep(5)
+        result = plasma_checker.check()
+        if result:
+            self._logger.info("--> Reignition process: Reignition successful")
+        else:
+            self._logger.warning("--> Reignition process: Reignition unsuccessful")
+            return False
+
+        self._logger.info("--> Reignition process: Setting sputter pressure %s (mbar) in 5 seconds", sputter_pressure)
+        self._timer.sleep(5)
+        valve.set_pressure(sputter_pressure)
+
+        self._logger.info("--> Reignition process: Checking plasma in 10 seconds...")
+        self._timer.sleep(10)
+        result = plasma_checker.check()
+        if result:
+            self._logger.info("--> Reignition process: Reignition successful")
+        else:
+            self._logger.warning("--> Reignition process: Reignition unsuccessful")
+            return False
 
     def _check_sequence(self, sequence):
         assert isinstance(sequence, list)
