@@ -231,7 +231,7 @@ class SputterProcess(object):
                     except:
                         voltage = "Unk."
 
-                    self._logger.info("### --> Plasma Checker: TrumpfRF: %s Volt at %s Watt", voltage, power_backward)
+                    self._logger.info("### --> Plasma Checker: TrumpfRF: %s Volt at %s Watt", voltage, power_forward)
                     return True
             else:
                 self._logger.error("Unknown sputter device.")
