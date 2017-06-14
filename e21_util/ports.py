@@ -1,6 +1,8 @@
 
 class Ports(object):
 
+    NOT_CONNECTED = (0, 0)
+
     MOXA_16_PORT_1 = (1, 1)
     MOXA_16_PORT_2 = (1, 2)
     MOXA_16_PORT_3 = (1, 3)
@@ -27,6 +29,9 @@ class Ports(object):
     MOXA_8_PORT_7 = (2, 7)
     MOXA_8_PORT_8 = (2, 8)
 
+    USB_TO_RS232  = (3, 1)
+
+
     DEVICE_PFEIFFER_GAUGE    = MOXA_16_PORT_1
     DEVICE_JULABO            = MOXA_16_PORT_2
     DEVICE_RELAIS            = MOXA_16_PORT_3
@@ -37,7 +42,7 @@ class Ports(object):
     DEVICE_MOTOR_X           = MOXA_16_PORT_8
     DEVICE_MOTOR_C           = MOXA_16_PORT_9
     DEVICE_MOTOR_D           = MOXA_16_PORT_10
-    DEVICE_ADL_A             = MOXA_16_PORT_11
+    #DEVICE_ADL_A             = MOXA_16_PORT_11
     DEVICE_TURBO_PUMP        = MOXA_16_PORT_12
     DEVICE_COMPRESSOR        = MOXA_16_PORT_13
     DEVICE_PHYTRON           = MOXA_16_PORT_14
@@ -46,8 +51,11 @@ class Ports(object):
 
     DEVICE_HEATING           = MOXA_8_PORT_1
     DEVICE_ADL_B             = MOXA_8_PORT_2
-    DEVICE_PFEIFFER_D21      = MOXA_8_PORT_3
+    DEVICE_PFEIFFER_TURBO    = MOXA_8_PORT_3
     DEVICE_SPUTTER_TRUMPF_DC = MOXA_8_PORT_4
+    DEVICE_ADL_A             = MOXA_8_PORT_5
+
+    DEVICE_LAKESHORE         = USB_TO_RS232
 
 
     def __init__(self):
@@ -55,6 +63,20 @@ class Ports(object):
 
     def get_port(self, device):
         assert isinstance(device, tuple)
+        assert 0 <= device[0] <= 3
+        assert 0 <= device[1] <= 16
+
+        if device[0] == 2 and device[1] > 8:
+            raise RuntimeError("Moxa-Box 8 has only 8 ports. Cannot assign port " + str(device[1]))
+
+        if device[0] == 0 or device[1] == 0:
+            raise RuntimeError("Given device is currently not connected")
+
+        if device[0] == 3:
+            if device[1] == 1:
+                return "/dev/ttyUBS0"
+
+            raise RuntimeError("Only one USB to RS232 connection available")
 
         number = (device[0] - 1)*16 + (device[1])
 
