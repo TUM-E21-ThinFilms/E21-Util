@@ -15,7 +15,6 @@ from devcontroller.shutter import ShutterController
 from devcontroller.lakeshore import LakeshoreController
 from tpg26x.driver import PfeifferTPG26xDriver
 
-
 class SputterProcess(object):
     DEFAULT_LOGGING_DIRECTORY = "/home/sputter/Python/scripts/log/"
     DEFAULT_IGNITION_PRESSURE = 6e-3  # mbar
