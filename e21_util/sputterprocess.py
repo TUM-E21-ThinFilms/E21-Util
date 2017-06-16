@@ -176,6 +176,7 @@ class SputterProcess(object):
             self._timer = timer
             self._reignite_count = 0
             self._reignite_threshold = 5
+            self._do_reignition = False
             super(SputterProcess.PlasmaChecker, self).__init__()
 
         def on(self):
@@ -394,7 +395,7 @@ class SputterProcess(object):
         self._logger.info("Pre-sputter process finished")
 
     def _sputter_ignition(self, ignition_pressure, pre_power, sputter, valve, ignition_wait_time = 300):
-        ignition_time = 5
+        ignition_time = 20
 
         self._logger.info("Ignition process started")
         self._logger.info("--> Ignition parameter: Using ignition pressure %s (mbar)", ignition_pressure)
@@ -434,37 +435,47 @@ class SputterProcess(object):
         result = self._reignition_process(ignition_pressure, sputter_pressure, pre_power, sputter, valve, plasma_checker)
 
         if not result:
-            self._do_reignite()
+            self._do_reignite(ignition_pressure, sputter_pressure, pre_power, sputter, valve, plasma_checker)
         else:
             plasma_checker.reset_reignition_counter()
 
     def _reignition_process(self, ignition_pressure, sputter_pressure, pre_power, sputter, valve, plasma_checker):
 
         self._logger.info("Reignition process started")
-        self._logger.info("--> Reignition process: Turn of sputter power supply")
+        self._logger.info("--> Reignition process: Turn off sputter power supply")
         sputter.off()
         self._logger.info("--> Reignition process: Setting ignition pressure % (mbar)", ignition_pressure)
         valve.set_pressure(ignition_pressure)
-        self._timer.sleep(5)
+        self._timer.sleep(15)
         self._logger.info("--> Reignition process: Turn on sputter power supply at %s (Watt)", pre_power)
         sputter.power(pre_power)
         sputter.on()
-        self._logger.info("--> Reignition process: Checking plasma in 5 seconds...")
-        self._timer.sleep(5)
-        result = plasma_checker.check()
+        self._logger.info("--> Reignition process: Checking plasma in 30 seconds...")
+        self._timer.sleep(30)
+        try:
+            result = plasma_checker.check()
+        except:
+            self._logger.warning("Could not check plasma in reignition process")
+            return False
+
         if result:
             self._logger.info("--> Reignition process: Reignition successful")
         else:
             self._logger.warning("--> Reignition process: Reignition unsuccessful")
             return False
 
-        self._logger.info("--> Reignition process: Setting sputter pressure %s (mbar) in 5 seconds", sputter_pressure)
-        self._timer.sleep(5)
+        self._logger.info("--> Reignition process: Setting sputter pressure %s (mbar) in 10 seconds", sputter_pressure)
+        self._timer.sleep(10)
         valve.set_pressure(sputter_pressure)
 
-        self._logger.info("--> Reignition process: Checking plasma in 10 seconds...")
-        self._timer.sleep(10)
-        result = plasma_checker.check()
+        self._logger.info("--> Reignition process: Checking plasma in 30 seconds...")
+        self._timer.sleep(30)
+        try:
+            result = plasma_checker.check()
+        except:
+            self._logger.warning("Could not re-check plasma in reignition process")
+            return False
+
         if result:
             self._logger.info("--> Reignition process: Reignition successful")
         else:
