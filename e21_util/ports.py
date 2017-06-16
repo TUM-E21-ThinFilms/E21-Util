@@ -74,7 +74,7 @@ class Ports(object):
 
         if device[0] == 3:
             if device[1] == 1:
-                return "/dev/ttyUBS0"
+                return "/dev/ttyUSB0"
 
             raise RuntimeError("Only one USB to RS232 connection available")
 
