@@ -1,6 +1,7 @@
 import time
 import datetime
 import logging
+import os.path
 
 from logging.handlers import SMTPHandler
 from e21_util.gunparameter import GunSelectionConfigParser, GunSelectionConfig
@@ -74,8 +75,11 @@ class SputterProcess(object):
         if not self._logger is None:
             return
 
-        # e.g. 2017-04-21_DbTy_MgO.log
-        filepath = self.DEFAULT_LOGGING_DIRECTORY + str(datetime.date.today()) + "_" + self._name + ".log"
+        # e.g. DbTy_MgO.log
+        filepath = self.DEFAULT_LOGGING_DIRECTORY + self._name + ".log"
+
+        if os.path.isfile(filepath):
+            raise RuntimeError("Name already exists. Choose a different name.")
 
         self._logger = logging.getLogger('Sputter process')
         self._logger.setLevel(logging.DEBUG)
