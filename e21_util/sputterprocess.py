@@ -30,7 +30,7 @@ class SputterProcess(object):
     GAS_TYPE_AR = 0
     GAS_TYPE_O2 = 1
 
-    def __init__(self, process_name, timer=None, configparser = None, logger=None):
+    def __init__(self, process_name, timer=None, configparser = None, logger=None, append=False):
         self._name = process_name
         self._logger = logger
         if configparser is None:
@@ -44,6 +44,7 @@ class SputterProcess(object):
         self.create_logger()
         self._reignition_count = 0
         self._reignition_threshold = 3
+        self._append = append
 
     def drivers(self, gun, vat_ar, vat_o2, adl_a, adl_b, trumpfrf, shutter, julabo, gauge, lakeshore):
         self._gun = gun
@@ -86,7 +87,7 @@ class SputterProcess(object):
             else:
                 raise
 
-        if os.path.isfile(filepath):
+        if os.path.isfile(filepath) and self._append is False:
             raise RuntimeError("Name already exists. Choose a different name.")
 
         self._logger = logging.getLogger('Sputter process')
