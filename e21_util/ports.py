@@ -43,7 +43,7 @@ class Ports(object):
     DEVICE_MOTOR_X           = MOXA_16_PORT_8
     DEVICE_MOTOR_C           = MOXA_16_PORT_9
     DEVICE_MOTOR_D           = MOXA_16_PORT_10
-    #DEVICE_ADL_A             = MOXA_16_PORT_11
+    DEVICE_GAUGE_CRYO        = MOXA_16_PORT_11
     DEVICE_TURBO_PUMP        = MOXA_16_PORT_12
     DEVICE_COMPRESSOR        = MOXA_16_PORT_13
     DEVICE_PHYTRON           = MOXA_16_PORT_14
