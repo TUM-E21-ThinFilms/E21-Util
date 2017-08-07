@@ -326,7 +326,7 @@ class SputterProcess(object):
         except BaseException as e:
             self._turn_off(sputter, valve)
             self._logger.error(
-                "Exception while sputtering at " + str(datetime.datetime.now()) + ". Turned everything off immediately")
+                "Exception while sputtering at " + str(datetime.datetime.now()) + ". Turned everything off. Abortion reason:")
             self._logger.exception(e)
 
             raise e
