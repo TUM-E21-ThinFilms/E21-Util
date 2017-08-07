@@ -253,8 +253,10 @@ class SputterProcess(object):
 
         def _reignite(self):
             self._reignite_count += 1
+            self._logger.info("### --> Plasma Checker: Reignition counter: %s of %s", self._reignite_count, self._reignite_threshold)
 
             if self._reignite_count > self._reignite_threshold:
+                self._logger.info("### --> Plasma Checker: Reignition process unlocked")
                 self._do_reignition = True
                 self._reignite_count = 0
 
@@ -415,9 +417,9 @@ class SputterProcess(object):
         self._logger.info("--> Ignition parameter: Using ignition power %s (Watt)", pre_power)
         self._logger.info("--> Ignition parameter: Using ignition timer %s (seconds)", ignition_time)
         self._logger.info("--> Ignition process: Base pressure at %s mbar", self._gauge.get_pressure_measurement()[1])
-        self._logger.info("--> Ignition process: Setting pressure and waiting 15 seconds")
+        self._logger.info("--> Ignition process: Setting pressure and waiting 20 seconds")
         valve.set_pressure(ignition_pressure)
-        self._timer.sleep(15)
+        self._timer.sleep(20)
 
         if self._leak_valve_type == self.GAS_TYPE_O2 and ignition_wait_time > 0:
             self._logger.info("--> Ignition process: Waiting "+str(ignition_wait_time)+" seconds for the correct O_2 ratio")
