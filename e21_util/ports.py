@@ -56,8 +56,8 @@ class Ports(object):
     DEVICE_SPUTTER_TRUMPF_DC = MOXA_8_PORT_4
     DEVICE_ADL_A             = MOXA_8_PORT_5
 
-    DEVICE_LAKESHORE         = USB_TO_RS232_1
-    DEVICE_VOLTCRAFT_IR_1200 = USB_TO_RS232_2
+    DEVICE_LAKESHORE         = USB_TO_RS232_2
+    DEVICE_VOLTCRAFT_IR_1200 = USB_TO_RS232_1
 
 
     def __init__(self):
