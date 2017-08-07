@@ -457,7 +457,7 @@ class SputterProcess(object):
         self._logger.info("Reignition process started")
         self._logger.info("--> Reignition process: Turn off sputter power supply")
         sputter.off()
-        self._logger.info("--> Reignition process: Setting ignition pressure % (mbar)", ignition_pressure)
+        self._logger.info("--> Reignition process: Setting ignition pressure %s (mbar)", ignition_pressure)
         valve.set_pressure(ignition_pressure)
         self._timer.sleep(15)
         self._logger.info("--> Reignition process: Turn on sputter power supply at %s (Watt)", pre_power)
