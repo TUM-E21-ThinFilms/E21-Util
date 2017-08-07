@@ -29,7 +29,8 @@ class Ports(object):
     MOXA_8_PORT_7 = (2, 7)
     MOXA_8_PORT_8 = (2, 8)
 
-    USB_TO_RS232  = (3, 1)
+    USB_TO_RS232_1  = (3, 1)
+    USB_TO_RS232_2  = (3, 2)
 
 
     DEVICE_PFEIFFER_GAUGE    = MOXA_16_PORT_1
@@ -55,7 +56,8 @@ class Ports(object):
     DEVICE_SPUTTER_TRUMPF_DC = MOXA_8_PORT_4
     DEVICE_ADL_A             = MOXA_8_PORT_5
 
-    DEVICE_LAKESHORE         = USB_TO_RS232
+    DEVICE_LAKESHORE         = USB_TO_RS232_1
+    DEVICE_VOLTCRAFT_IR_1200 = USB_TO_RS232_2
 
 
     def __init__(self):
@@ -75,6 +77,8 @@ class Ports(object):
         if device[0] == 3:
             if device[1] == 1:
                 return "/dev/ttyUSB0"
+            if device[1] == 2:
+                return "/dev/ttyUSB25"
 
             raise RuntimeError("Only one USB to RS232 connection available")
 
