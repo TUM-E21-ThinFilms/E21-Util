@@ -15,6 +15,11 @@
 
 import fasteners
 
+LOCK_DIR = "/media/ramdisk"
+
+HEIDENHAIN_LOCK = fasteners.InterProcessLock(LOCK_DIR + "/heidenhain")
+
 class InterProcessTransportLock(fasteners.InterProcessLock):
     def __init__(self, transport, *args, **kwargs):
-        super(InterProcessTransportLock, self).__init__("/media/ramdisk" + transport.get_name(), *args, **kwargs)
+        super(InterProcessTransportLock, self).__init__(LOCK_DIR + transport.get_name(), *args, **kwargs)
+
