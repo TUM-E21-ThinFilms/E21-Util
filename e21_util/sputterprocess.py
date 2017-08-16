@@ -309,6 +309,10 @@ class SputterProcess(object):
         self._logger.info("Continuing in five seconds...")
         self._timer.sleep(5)
 
+        self._shutter.init()
+        self._logger.info("Shutter initialized.")
+        self._shutter.close()
+
         self.select_gun(gun_number)
         self._logger.info("Gun positioned.")
 
@@ -322,6 +326,8 @@ class SputterProcess(object):
             self._sputter_dosputter(power, pressure, sputter, sputter_time)
             plasma_checker.off()
             self._turn_off(sputter, valve)
+            self._timer.sleep(1)
+            self._shutter.reset()
 
         except BaseException as e:
             self._turn_off(sputter, valve)
@@ -375,7 +381,6 @@ class SputterProcess(object):
         self._logger.info("--> Sputter process: Waiting 2 seconds for the shutter to fully close")
         self._timer.sleep(2)
         self._logger.info("Sputter process finished at %s", datetime.datetime.now())
-        self._shutter.reset()
 
     def _sputter_on(self, power, sputter):
         retries = 3
