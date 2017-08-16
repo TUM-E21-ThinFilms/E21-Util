@@ -375,6 +375,7 @@ class SputterProcess(object):
         self._logger.info("--> Sputter process: Waiting 2 seconds for the shutter to fully close")
         self._timer.sleep(2)
         self._logger.info("Sputter process finished at %s", datetime.datetime.now())
+        self._shutter.reset()
 
     def _sputter_on(self, power, sputter):
         retries = 3
