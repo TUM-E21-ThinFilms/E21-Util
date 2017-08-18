@@ -19,15 +19,19 @@ class Interruptor(object):
             raise StopException()
 
 class InterruptableTimer(object):
-    def __init__(self, interrupt):
+    def __init__(self, interrupt, steps = 1):
         self._t = 0
         self._interrupt = interrupt
+        if steps <= 0:
+            raise RuntimeError("time steps must be positive")
+
+        self._steps = steps
 
     def sleep(self, time_sec):
-        while time_sec > 1:
+        while time_sec > self._steps:
             self._interrupt.stoppable()
-            time.sleep(1)
-            time_sec -= 1
+            time.sleep(self._steps)
+            time_sec -= self._steps
 
         time.sleep(time_sec)
         self._interrupt.stoppable()
