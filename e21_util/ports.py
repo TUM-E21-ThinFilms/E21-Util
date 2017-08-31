@@ -49,6 +49,7 @@ class Ports(object):
     DEVICE_PHYTRON           = MOXA_16_PORT_14
     DEVICE_SPUTTER_TRUMPF_RF = MOXA_16_PORT_15
     DEVICE_SHUTTER           = MOXA_16_PORT_16
+    DEVICE_TERRANOVA         = NOT_CONNECTED
 
     DEVICE_HEATING           = MOXA_8_PORT_1
     DEVICE_ADL_B             = MOXA_8_PORT_2

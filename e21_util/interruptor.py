@@ -1,5 +1,6 @@
 import threading
 import time
+import datetime
 
 class StopException(Exception):
     pass
@@ -35,6 +36,16 @@ class InterruptableTimer(object):
 
         time.sleep(time_sec)
         self._interrupt.stoppable()
+
+    def sleep_til(self, timestamp, logger, interval=15):
+        logger.info("Sleep until %s ...", datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S'))
+        while True:
+            stoppable(self._interrupt)
+            cur_time = time.time()
+            if cur_time >= timestamp:
+                break
+            time.sleep(interval)
+            logger.info("Current time: %s, goal: %s, diff in minutes %s", cur_time, timestamp, (timestamp - cur_time) / 60.0)
 
 '''
     @:raises StopException
