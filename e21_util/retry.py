@@ -1,17 +1,17 @@
 import time
 from functools import wraps
-
+from e21_util.interface import Loggable, Interruptable
 
 def retry(retry_count=3, logger=None, catch=Exception, interruptor=None, delay=0):
     def retry_decorator(f):
         @wraps(f)
         def wrapped(self, *f_args, **f_kwargs):
-            if logger is None and hasattr(self, 'get_logger'):
+            if logger is None and isinstance(self, Loggable):
                 loc_logger = self.get_logger()
             else:
                 loc_logger = logger
 
-            if interruptor is True and hasattr(self, 'get_interrupt'):
+            if interruptor is True and isinstance(self, Interruptable):
                 loc_interruptor = self.get_interrupt()
             else:
                 loc_interruptor = interruptor

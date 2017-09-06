@@ -42,9 +42,9 @@ class SputterProcess(object):
         if interrupt is None:
             interrupt = Interruptor()
 
-        self._interrupt = interrupt
+        self._interruptor = interrupt
         if timer is None:
-            timer = InterruptableTimer(self._interrupt)
+            timer = InterruptableTimer(self._interruptor)
 
         self._timer = timer
         self._leak_valve_type = None
@@ -67,10 +67,9 @@ class SputterProcess(object):
         self._check_drivers()
 
     def interrupt(self):
-        self._interrupt.stop()
+        self._interruptor.stop()
 
-    def _interrupt(self):
-        self._interrupt.stoppable()
+    def _interrupt(self):        self._interruptor.stoppable()
 
     def _check_drivers(self):
         assert isinstance(self._gun, GunController)
