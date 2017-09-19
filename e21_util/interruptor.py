@@ -20,7 +20,7 @@ class Interruptor(object):
             raise StopException()
 
 class InterruptableTimer(object):
-    def __init__(self, interrupt, steps = 1):
+    def __init__(self, interrupt, steps=1):
         self._t = 0
         self._interrupt = interrupt
         if steps <= 0:
@@ -46,6 +46,14 @@ class InterruptableTimer(object):
                 break
             time.sleep(interval)
             logger.info("Current time: %s, goal: %s, diff in minutes %s", cur_time, timestamp, (timestamp - cur_time) / 60.0)
+
+
+class DummyTimer(object):
+    def sleep(self, time_sec):
+        pass
+
+    def sleep_til(self):
+        pass
 
 '''
     @:raises StopException

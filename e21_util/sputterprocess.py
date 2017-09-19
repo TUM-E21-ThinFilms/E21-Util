@@ -7,6 +7,7 @@ import errno
 from logging.handlers import SMTPHandler
 from e21_util.gunparameter import GunSelectionConfigParser, GunSelectionConfig
 from e21_util.interruptor import StopException, Interruptor, InterruptableTimer
+from e21_util.retry import retry
 
 from devcontroller.misc.thread import StoppableThread
 from devcontroller.gun import GunController
@@ -17,6 +18,7 @@ from devcontroller.julabo import JulaboController
 from devcontroller.shutter import ShutterController
 from devcontroller.lakeshore import LakeshoreController
 from tpg26x.driver import PfeifferTPG26xDriver
+
 
 class SputterProcess(object):
     DEFAULT_LOGGING_DIRECTORY = "/home/sputter/Python/scripts/log/"
@@ -31,13 +33,14 @@ class SputterProcess(object):
     GAS_TYPE_AR = 0
     GAS_TYPE_O2 = 1
 
-    def __init__(self, process_name, timer=None, configparser = None, logger=None, append=False, interrupt=None):
+    def __init__(self, process_name, timer=None, configparser=None, logger=None, append=False, interrupt=None):
         self._append = append
         self._name = process_name
         self._logger = logger
         if configparser is None:
             configparser = GunSelectionConfigParser()
         self._configParser = configparser
+        self._config = None
         self.load_config()
         if interrupt is None:
             interrupt = Interruptor()
@@ -69,7 +72,8 @@ class SputterProcess(object):
     def interrupt(self):
         self._interruptor.stop()
 
-    def _interrupt(self):        self._interruptor.stoppable()
+    def _interrupt(self):
+        self._interruptor.stoppable()
 
     def _check_drivers(self):
         assert isinstance(self._gun, GunController)
@@ -128,7 +132,7 @@ class SputterProcess(object):
                 return i
 
         raise RuntimeError(
-            "Could not find gun with material '" + material + "' . Maybe update material configuration via the parameter/parameter_small interface")
+                "Could not find gun with material '" + material + "' . Maybe update material configuration via the parameter/parameter_small interface")
 
     def select_gun(self, gun_number):
 
@@ -158,13 +162,13 @@ class SputterProcess(object):
                     raise e
                 return
             else:
-                self._logger.info("Gun not in place. Iteration %s of %s", i, self.GUN_CHANGING_ITERATIONS)
+                self._logger.info("Gun not in place. Iteration (%s) of (%s)", i, self.GUN_CHANGING_ITERATIONS)
                 self._timer.sleep(self.GUN_CHANGING_WAIT_TIME)
             i = i + 1
 
         # wait time can be increased by gun_changing_iterations, gun_changing_wait_time
         raise RuntimeError("Could not move gun to desired gun position " + str(
-            gun_number) + " in time. Maybe re-calibrate gun via calibrate() or increase waiting time?")
+                gun_number) + " in time. Maybe re-calibrate gun via calibrate() or increase waiting time?")
 
     def find_leak_valve(self, gas_name):
         if gas_name.lower() == 'ar':
@@ -244,7 +248,7 @@ class SputterProcess(object):
 
             elif isinstance(self._device, TrumpfPFG600Controller):
                 power_forward, power_backward = float(self._device.get_power_forward()), float(
-                    self._device.get_power_backward())
+                        self._device.get_power_backward())
 
                 if power_forward > 0.01 and power_backward / power_forward > 0.5:
                     self._logger.warning("Power backward/Power forward = %s/%s > 0.5. Probably no ignition",
@@ -279,12 +283,11 @@ class SputterProcess(object):
         def check_for_reignition(self):
             return self._do_reignition
 
-
     def _check_parameters(self, pressure, sputter_time, ignition_pressure, pre_power, pre_time, power):
         pass
 
     def sputter(self, material, gas, pressure, sputter_time,
-                    ignition_pressure=None, pre_power=None, pre_time=None, power=None):
+                ignition_pressure=None, pre_power=None, pre_time=None, power=None):
 
         if ignition_pressure is None or ignition_pressure <= 0:
             self._logger.info("No ignition pressure set, using the sputter pressure %s mbar", pressure)
@@ -309,10 +312,10 @@ class SputterProcess(object):
         self._check_parameters(pressure, sputter_time, ignition_pressure, pre_power, pre_time, power)
         self._check_drivers()
         self._interrupt()
-        #self._logger.info("Sputter process: Ignition process: ")
+        # self._logger.info("Sputter process: Ignition process: ")
         self._logger.info(
-            "Sputtering process started. Using material %s @ (%s Watt, %s mbar) for %s seconds",
-            material, power, pressure, sputter_time)
+                "Sputtering process started. Using material %s @ (%s Watt, %s mbar) for %s seconds",
+                material, power, pressure, sputter_time)
 
         gun_number = self.find_gun_in_config(material)
         valve = self.find_leak_valve(gas)
@@ -350,14 +353,14 @@ class SputterProcess(object):
         except BaseException as e:
             self._turn_off(sputter, valve)
             self._logger.error(
-                "Exception while sputtering at " + str(datetime.datetime.now()) + ". Turned everything off. Abortion reason:")
+                    "Exception while sputtering at " + str(datetime.datetime.now()) + ". Turned everything off. Abortion reason:")
             self._logger.exception(e)
 
             raise e
 
         self._logger.info(
-            "Sputter process finished. Used material %s @ (%s Watt, %s mbar) for %s seconds",
-            material, power, pressure, sputter_time)
+                "Sputter process finished. Used material %s @ (%s Watt, %s mbar) for %s seconds",
+                material, power, pressure, sputter_time)
 
     def _turn_off(self, sputter, valve):
         try:
@@ -368,7 +371,7 @@ class SputterProcess(object):
             self._logger.info("Turned off sputter device and closed valve.")
         except BaseException as e:
             self._logger.critical(
-                "Exception while closing valve or turning sputter off. Turn these devices manually off!")
+                    "Exception while closing valve or turning sputter off. Turn these devices manually off!")
             self._logger.exception(e)
             raise e
 
@@ -403,26 +406,14 @@ class SputterProcess(object):
         self._timer.sleep(2)
         self._logger.info("Sputter process finished at %s", datetime.datetime.now())
 
+    @retry(retry_count=3, delay=1)
     def _sputter_on(self, power, sputter):
-        retries = 3
-        for i in range(0, retries):
-            try:
-                self._interrupt()
-                sputter.power(power)
-                self._interrupt()
-                sputter.on()
-                self._interrupt()
-                self._timer.sleep(1)
-                break
-            except StopException as e:
-                raise e
-            except BaseException as e:
-                if i == retries - 1:
-                    self._logger.error("Could not set sputter power. Aborting...")
-                    self._logger.exception(e)
-                    raise e
-                else:
-                    self._logger.info("Could not set sputter power. Retry %s of %s", (i + 1), retries)
+        self._interrupt()
+        sputter.power(power)
+        self._interrupt()
+        sputter.on()
+        self._interrupt()
+        self._timer.sleep(1)
 
     def _sputter_presputter(self, pre_power, pre_time, pressure, valve, ignition_pressure, sputter, plasma_checker):
         self._logger.info("Pre-sputter process started")
@@ -444,7 +435,7 @@ class SputterProcess(object):
         self._logger.info("--> Pre-sputter process: Finished pre-sputtering")
         self._logger.info("Pre-sputter process finished")
 
-    def _sputter_ignition(self, ignition_pressure, pre_power, sputter, valve, ignition_wait_time = 300):
+    def _sputter_ignition(self, ignition_pressure, pre_power, sputter, valve, ignition_wait_time=300):
         ignition_time = 20
 
         self._logger.info("Ignition process started")
@@ -458,7 +449,7 @@ class SputterProcess(object):
         self._timer.sleep(20)
 
         if self._leak_valve_type == self.GAS_TYPE_O2 and ignition_wait_time > 0:
-            self._logger.info("--> Ignition process: Waiting "+str(ignition_wait_time)+" seconds for the correct O_2 ratio")
+            self._logger.info("--> Ignition process: Waiting " + str(ignition_wait_time) + " seconds for the correct O_2 ratio")
             self._timer.sleep(ignition_wait_time)
 
         self._logger.info("--> Ignition process: Starting pre-sputtering with pressure %s",
@@ -546,7 +537,6 @@ class SputterProcess(object):
         for element in sequence:
             assert isinstance(element, (list, dict))
 
-
     def sputter_sequence(self, sequence, startpoint=0):
         self._check_sequence(sequence)
 
@@ -562,7 +552,7 @@ class SputterProcess(object):
             else:
                 self.sputter(*sequence[i])
             self._interrupt()
-            self._logger.info("==> Sputter sequence: Finished sequence number %s of %s", i+ 1, iterations)
+            self._logger.info("==> Sputter sequence: Finished sequence number %s of %s", i + 1, iterations)
             self._logger.info("==> Sputter sequence: with parameters --> %s", sequence[i])
 
         self._julabo.off()
