@@ -15,7 +15,7 @@
 
 import fasteners
 
-LOCK_DIR = "/media/ramdisk"
+LOCK_DIR = "/run/media/ramdisk"
 
 def HEIDENHAIN_LOCK():
     return fasteners.InterProcessLock(LOCK_DIR + "/heidenhain")
