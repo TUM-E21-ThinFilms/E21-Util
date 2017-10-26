@@ -36,7 +36,7 @@ class EmailConfig(object):
 class EmailConfigParser(object):
     SECTION = 'EMAIL'
 
-    DEFAULT_CONFIG_FILE = '/home/sputter/Python/lib/config/email.conf'
+    DEFAULT_CONFIG_FILE = '/home/sputter/Python/lib/config/email.config'
 
     def __init__(self, config_file=None):
         if config_file is None:
