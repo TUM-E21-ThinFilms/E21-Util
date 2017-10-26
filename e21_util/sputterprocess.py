@@ -1,4 +1,3 @@
-import time
 import datetime
 import logging
 import os.path
@@ -8,6 +7,7 @@ from logging.handlers import SMTPHandler
 from e21_util.gunparameter import GunSelectionConfigParser, GunSelectionConfig
 from e21_util.interruptor import StopException, Interruptor, InterruptableTimer
 from e21_util.retry import retry
+from e21_util.emailparameter import EmailConfigParser
 
 from devcontroller.misc.thread import StoppableThread
 from devcontroller.gun import GunController
@@ -17,6 +17,7 @@ from devcontroller.trumpfrf import TrumpfPFG600Controller
 from devcontroller.julabo import JulaboController
 from devcontroller.shutter import ShutterController
 from devcontroller.lakeshore import LakeshoreController
+from devcontroller.terranova import TerranovaController
 from tpg26x.driver import PfeifferTPG26xDriver
 
 
@@ -55,7 +56,7 @@ class SputterProcess(object):
         self._reignition_count = 0
         self._reignition_threshold = 3
 
-    def drivers(self, gun, vat_ar, vat_o2, adl_a, adl_b, trumpfrf, shutter, julabo, gauge, lakeshore):
+    def drivers(self, gun, vat_ar, vat_o2, adl_a, adl_b, trumpfrf, shutter, julabo, gauge, lakeshore, terranova):
         self._gun = gun
         self._vat_ar = vat_ar
         self._vat_o2 = vat_o2
@@ -66,6 +67,7 @@ class SputterProcess(object):
         self._gauge = gauge
         self._shutter = shutter
         self._lakeshore = lakeshore
+        self._terranova = terranova
 
         self._check_drivers()
 
@@ -85,6 +87,7 @@ class SputterProcess(object):
         assert isinstance(self._julabo, JulaboController)
         assert isinstance(self._shutter, ShutterController)
         assert isinstance(self._lakeshore, LakeshoreController)
+        assert isinstance(self._terranova, TerranovaController)
         assert isinstance(self._gauge, PfeifferTPG26xDriver)  # TODO: might be changed to a GaugeController?
 
     def create_logger(self):
@@ -115,12 +118,16 @@ class SputterProcess(object):
         ch.setLevel(logging.DEBUG)
         ch.setFormatter(formatter)
         self._logger.addHandler(ch)
-        toaddrs = ['alexander.book@frm2.tum.de', 'Jingfan.Ye@frm2.tum.de']
-        # mailhandler = SMTPHandler(('smtp.frm2.tum.de', 587), 'sputterpc.e21@frm2.tum.de', toaddrs, 'Sputter-PC Message', ('sputterpc.e21', 'pw'))
-        # mailhandler.setFormatter(formatter)
-        # mailhandler.setLevel(logging.WARNING)
+
+        emailconfig = EmailConfigParser().get_config()
+
+        toaddrs = ['alexander.book@frm2.tum.de']
+        mailhandler = SMTPHandler((emailconfig.get_host(), emailconfig.get_port()), emailconfig.get_user(), toaddrs, 'Sputter-PC Message',
+                                  (emailconfig.get_user(), emailconfig.get_password()))
+        mailhandler.setFormatter(formatter)
+        mailhandler.setLevel(logging.WARNING)
         self._logger.addHandler(fh)
-        # self.logger.addHandler(mailhandler)
+        self._logger.addHandler(mailhandler)
 
     def load_config(self):
         self._config = self._configParser.get_config()
@@ -320,6 +327,7 @@ class SputterProcess(object):
         gun_number = self.find_gun_in_config(material)
         valve = self.find_leak_valve(gas)
         sputter = self.find_sputter_device(gun_number)
+        self._terranova.off()
         self._interrupt()
         self._julabo.on()
         self._logger.info("Continuing in five seconds...")
