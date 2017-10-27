@@ -214,13 +214,13 @@ class SputterProcess(object):
             self._reignite_count = 0
             self._reignite_threshold = 5
             self._do_reignition = False
-            self.daemon = True
             super(SputterProcess.PlasmaChecker, self).__init__()
+            self.daemon = True
 
         def on(self, sputter_device=None):
             if not sputter_device is None:
                 self._device = sputter_device
-                
+
             self._logger.info("Turning plasma checker on")
             self.start()
 
