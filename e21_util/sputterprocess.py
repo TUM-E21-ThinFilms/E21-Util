@@ -2,6 +2,7 @@ import datetime
 import logging
 import os.path
 import errno
+import time
 
 from logging.handlers import SMTPHandler
 from e21_util.gunparameter import GunSelectionConfigParser, GunSelectionConfig
@@ -123,7 +124,7 @@ class SputterProcess(object):
 
         toaddrs = ['alexander.book@frm2.tum.de']
         mailhandler = SMTPHandler((emailconfig.get_host(), emailconfig.get_port()), emailconfig.get_user(), toaddrs, 'Sputter-PC Message',
-                                  (emailconfig.get_user(), emailconfig.get_password()))
+                                  (emailconfig.get_user(), emailconfig.get_password()), ())
         mailhandler.setFormatter(formatter)
         mailhandler.setLevel(logging.WARNING)
         self._logger.addHandler(fh)
@@ -206,17 +207,20 @@ class SputterProcess(object):
             raise RuntimeError("Could not determine sputter device. ")
 
     class PlasmaChecker(StoppableThread):
-        def __init__(self, sputter_device, logger, timer):
+        def __init__(self, sputter_device, logger, timer=time):
             self._device = sputter_device
             self._logger = logger
             self._timer = timer
             self._reignite_count = 0
             self._reignite_threshold = 5
             self._do_reignition = False
+            self.daemon = True
             super(SputterProcess.PlasmaChecker, self).__init__()
 
-        def on(self):
-            self.daemon = True
+        def on(self, sputter_device=None):
+            if not sputter_device is None:
+                self._device = sputter_device
+                
             self._logger.info("Turning plasma checker on")
             self.start()
 
@@ -224,6 +228,7 @@ class SputterProcess(object):
             try:
                 self._logger.info("Turning plasma checker off")
                 self.stop()
+
             except BaseException as e:
                 self._logger.warning("Exception while turning plasma checker off.")
 
