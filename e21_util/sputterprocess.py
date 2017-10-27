@@ -569,3 +569,7 @@ class SputterProcess(object):
             self._logger.info("==> Sputter sequence: with parameters --> %s", sequence[i])
 
         self._julabo.off()
+
+def plasma_checker(device=None):
+    sp = SputterProcess("PlasmaChecker", append=True)
+    return sp.PlasmaChecker(device, sp._logger)
