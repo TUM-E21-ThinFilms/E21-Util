@@ -49,6 +49,7 @@ class Ports(object):
     DEVICE_JULABO               = MOXA_16_PORT_15
     DEVICE_SHUTTER              = MOXA_16_PORT_16
 
+    DEVICE_EDWARDS_NXDS         = MOXA_8_PORT_8
 
     DEVICE_HEATING              = MOXA_8_PORT_1
     DEVICE_ADL_B                = MOXA_8_PORT_2
