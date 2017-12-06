@@ -1,4 +1,4 @@
-# Copyright (C) 2016, see AUTHORS.md
+# Copyright (C) 2017, see AUTHORS.md
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,16 +13,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import fasteners
-from paths import Paths
 
-LOCK_DIR = Paths.LOCK_DIR
-HEIDENHAIN_LOCK_DIR = Paths.HEIDENHAIN_LOCK_DIR
-
-def HEIDENHAIN_LOCK():
-    return fasteners.InterProcessLock(HEIDENHAIN_LOCK_DIR)
-
-class InterProcessTransportLock(fasteners.InterProcessLock):
-    def __init__(self, transport, *args, **kwargs):
-        super(InterProcessTransportLock, self).__init__(LOCK_DIR + transport.get_name(), *args, **kwargs)
-
+class Paths(object):
+    GUN_CONFIG_PATH = "/home/sputter/Python/lib/config/gun.config"
+    EMAIL_CONFIG_PATH = "/home/sputter/Python/lib/config/email.config"
+    LOG_PATH = "/var/log/sputter/"
+    RAMDISK = "/run/media/ramdisk"
+    LOCK_DIR = RAMDISK
+    HEIDENHAIN_LOCK_DIR = LOCK_DIR + "/heidenhain"
+    CACHE_DIR = RAMDISK + "/cache/"

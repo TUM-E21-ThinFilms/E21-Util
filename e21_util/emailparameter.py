@@ -1,5 +1,6 @@
 import ConfigParser
 
+from paths import Paths
 
 class EmailConfig(object):
     def __init__(self):
@@ -36,7 +37,7 @@ class EmailConfig(object):
 class EmailConfigParser(object):
     SECTION = 'EMAIL'
 
-    DEFAULT_CONFIG_FILE = '/home/sputter/Python/lib/config/email.config'
+    DEFAULT_CONFIG_FILE = Paths.EMAIL_CONFIG_PATH
 
     def __init__(self, config_file=None):
         if config_file is None:

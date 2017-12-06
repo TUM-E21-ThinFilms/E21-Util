@@ -16,11 +16,12 @@
 
 import logging
 from logging.handlers import WatchedFileHandler
+from paths import Paths
 
 class SputterFileHandler(WatchedFileHandler):
     def __init__(self, filename):
         # The logs are placed in this folder, since a logrotate service is maintained here.
-        super(SputterFileHandler, self).__init__('/var/log/sputter/'+filename)
+        super(SputterFileHandler, self).__init__(Paths.LOG_PATH+filename)
 
 def get_sputter_logger(name, filename):
     logger = logging.getLogger(name)
