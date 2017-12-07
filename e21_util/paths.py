@@ -18,7 +18,7 @@ class Paths(object):
     GUN_CONFIG_PATH = "/home/sputter/Python/lib/config/gun.config"
     EMAIL_CONFIG_PATH = "/home/sputter/Python/lib/config/email.config"
     LOG_PATH = "/var/log/sputter/"
-    RAMDISK = "/run/media/ramdisk"
+    RAMDISK = "/run/media/ramdisk/lock"
     LOCK_DIR = RAMDISK
     HEIDENHAIN_LOCK_DIR = LOCK_DIR + "/heidenhain"
     CACHE_DIR = RAMDISK + "/cache/"

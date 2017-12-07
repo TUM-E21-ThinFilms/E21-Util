@@ -14,26 +14,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from e21_util.paths import Paths
-from cachepy import *
+from beaker.cache import CacheManager
+from beaker.util import parse_cache_config_options
 
-class AbstractCache(object):
-    def set(self, key, value):
-        pass
-
-    def get(self, key):
-        pass
-
-class AbstractCacheAdapter(object):
-    def __init__(self, cache):
-        self._cache = cache
-
-    def set(self, func, value):
-        chash = _hash(func, list(), self._cache.ttl, '')
-        self._cache.backend.store_data(chash, value, '', self._cache.ttl)
-
-    def get(self, func):
-        chash = _hash(func, list(), self._cache.ttl, '')
-        return self._cache.backend.get_data(chash, key='', ttl=self._cache.ttl)
-
-
-CACHE_TRUMPFDC = AbstractCacheAdapter(Cache(Paths.CACHE_DIR + "trumpfdc.cache", ttl=2))
+CACHE_TRUMPFDC = CacheManager(**parse_cache_config_options({
+    'cache.type':              'file',
+    'cache.data_dir':          Paths.CACHE_DIR + "trumpfdc",
+    'cache.lock_dir':          Paths.LOCK_DIR + "trumpfdc",
+    'cache.short_term.expire': '2',
+}))
