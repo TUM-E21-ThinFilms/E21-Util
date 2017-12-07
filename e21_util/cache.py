@@ -17,9 +17,18 @@ from e21_util.paths import Paths
 from beaker.cache import CacheManager
 from beaker.util import parse_cache_config_options
 
-CACHE_TRUMPFDC = CacheManager(**parse_cache_config_options({
+CACHE_TRUMPFDC_NAMESPACE = 'trumpfdc'
+CACHE_TRUMPFDC_EXPIRE = 2
+
+CACHE_OPTIONS = {
     'cache.type':              'file',
-    'cache.data_dir':          Paths.CACHE_DIR + "trumpfdc",
-    'cache.lock_dir':          Paths.LOCK_DIR + "trumpfdc",
-    'cache.short_term.expire': '2',
-}))
+    'cache.data_dir':          Paths.CACHE_DIR,
+    'cache.lock_dir':          Paths.LOCK_DIR,
+    'cache.regions':           ", ".join([CACHE_TRUMPFDC_NAMESPACE]),
+    'cache.short_term.type':   'file',
+    'cache.short_term.expire': CACHE_TRUMPFDC_EXPIRE
+}
+
+CACHE = CacheManager(**parse_cache_config_options(CACHE_OPTIONS))
+
+CACHE_TRUMPFDC = CACHE.region(CACHE_TRUMPFDC_NAMESPACE)
