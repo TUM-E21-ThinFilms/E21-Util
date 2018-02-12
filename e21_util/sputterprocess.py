@@ -248,7 +248,7 @@ class SputterProcess(object):
             if isinstance(self._device, ADLController):
                 voltage = self._device.get_voltage()
                 if voltage > 900:
-                    self._logger.warning("Voltage at %s V. Probably no ignition")
+                    self._logger.warning("Voltage at %s V. Probably no ignition", voltage)
                     return False
                 else:
                     try:
