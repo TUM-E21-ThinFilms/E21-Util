@@ -333,7 +333,8 @@ class SputterProcess(object):
         gun_number = self.find_gun_in_config(material)
         valve = self.find_leak_valve(gas)
         sputter = self.find_sputter_device(gun_number)
-        self._terranova.off()
+        #TODO: turn it really off!
+        #self._terranova.off()
         self._interrupt()
         self._julabo.on()
         self._logger.info("Continuing in five seconds...")

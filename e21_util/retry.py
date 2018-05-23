@@ -13,7 +13,7 @@ def retry(retry_count=3, logger=None, catch=Exception, interruptor=None, delay=0
                 loc_logger = logger
 
             if delay > 0:
-                timer = InterruptableTimer()
+                timer = InterruptableTimer(Interruptor())
             else:
                 timer = DummyTimer()
 
