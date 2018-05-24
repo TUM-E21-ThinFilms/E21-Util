@@ -35,7 +35,7 @@ class SputterProcess(object):
     GAS_TYPE_AR = 0
     GAS_TYPE_O2 = 1
 
-    def __init__(self, process_name, timer=None, configparser=None, logger=None, append=False, interrupt=None):
+    def __init__(self, process_name, timer=None, configparser=None, logger=None, append=False, interrupt=None, ignition_time=10):
         self._append = append
         self._name = process_name
         self._logger = logger
@@ -56,6 +56,7 @@ class SputterProcess(object):
         self.create_logger()
         self._reignition_count = 0
         self._reignition_threshold = 3
+        self._ignition_time = ignition_time
 
     def drivers(self, gun, vat_ar, vat_o2, adl_a, adl_b, trumpfrf, shutter, julabo, gauge, lakeshore, terranova):
         self._gun = gun
@@ -451,7 +452,7 @@ class SputterProcess(object):
         self._logger.info("Pre-sputter process finished")
 
     def _sputter_ignition(self, ignition_pressure, pre_power, sputter, valve, ignition_wait_time=300):
-        ignition_time = 20
+        ignition_time = self._ignition_time
 
         self._logger.info("Ignition process started")
         self._logger.info("--> Ignition parameter: Using ignition pressure %s (mbar)", ignition_pressure)
@@ -472,7 +473,7 @@ class SputterProcess(object):
         self._logger.info("--> Ignition process: Turning sputter device on")
         self._interrupt()
         self._sputter_on(pre_power, sputter)
-        self._logger.info("--> Ignition process: Sputter device turned on. Waiting for ignition timer")
+        self._logger.info("--> Ignition process: Sputter device turned on. Waiting for ignition timer (%s seconds)", ignition_time)
         self._timer.sleep(ignition_time)
         self._logger.info("Ignition process finished")
 
@@ -552,7 +553,7 @@ class SputterProcess(object):
         for element in sequence:
             assert isinstance(element, (list, dict))
 
-    def sputter_sequence(self, sequence, startpoint=0):
+    def sputter_sequence(self, sequence, startpoint=0, julabo_off=True):
         self._check_sequence(sequence)
 
         self._julabo.on()
@@ -570,7 +571,8 @@ class SputterProcess(object):
             self._logger.info("==> Sputter sequence: Finished sequence number %s of %s", i + 1, iterations)
             self._logger.info("==> Sputter sequence: with parameters --> %s", sequence[i])
 
-        self._julabo.off()
+        if julabo_off is True:
+            self._julabo.off()
 
 def plasma_checker(device=None):
     sp = SputterProcess("PlasmaChecker", append=True)
