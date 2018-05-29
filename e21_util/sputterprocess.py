@@ -384,6 +384,10 @@ class SputterProcess(object):
             self._logger.info("Closing valve")
             valve.close()
             self._logger.info("Turned off sputter device and closed valve.")
+            # might happen that the thread is faster than the off...
+            self._timer.sleep(1)
+            sputter.off()
+            valve.close()
         except BaseException as e:
             self._logger.critical(
                     "Exception while closing valve or turning sputter off. Turn these devices manually off!")
@@ -451,7 +455,7 @@ class SputterProcess(object):
         self._logger.info("Pre-sputter process finished")
 
     def _sputter_ignition(self, ignition_pressure, pre_power, sputter, valve, ignition_wait_time=300):
-        ignition_time = 20
+        ignition_time = 10
 
         self._logger.info("Ignition process started")
         self._logger.info("--> Ignition parameter: Using ignition pressure %s (mbar)", ignition_pressure)
@@ -472,7 +476,7 @@ class SputterProcess(object):
         self._logger.info("--> Ignition process: Turning sputter device on")
         self._interrupt()
         self._sputter_on(pre_power, sputter)
-        self._logger.info("--> Ignition process: Sputter device turned on. Waiting for ignition timer")
+        self._logger.info("--> Ignition process: Sputter device turned on. Waiting for ignition timer (%s seconds)", ignition_time)
         self._timer.sleep(ignition_time)
         self._logger.info("Ignition process finished")
 
@@ -552,7 +556,7 @@ class SputterProcess(object):
         for element in sequence:
             assert isinstance(element, (list, dict))
 
-    def sputter_sequence(self, sequence, startpoint=0):
+    def sputter_sequence(self, sequence, startpoint=0, julabo_on=False):
         self._check_sequence(sequence)
 
         self._julabo.on()
@@ -569,8 +573,8 @@ class SputterProcess(object):
             self._interrupt()
             self._logger.info("==> Sputter sequence: Finished sequence number %s of %s", i + 1, iterations)
             self._logger.info("==> Sputter sequence: with parameters --> %s", sequence[i])
-
-        self._julabo.off()
+        if julabo_on is False:
+            self._julabo.off()
 
 def plasma_checker(device=None):
     sp = SputterProcess("PlasmaChecker", append=True)

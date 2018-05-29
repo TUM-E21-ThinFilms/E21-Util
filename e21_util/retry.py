@@ -1,7 +1,7 @@
 import time
 from functools import wraps
 from e21_util.interface import Loggable, Interruptable
-from e21_util.interruptor import StopException, InterruptableTimer, DummyTimer
+from e21_util.interruptor import StopException, InterruptableTimer, Interruptor, DummyTimer
 
 def retry(retry_count=3, logger=None, catch=Exception, interruptor=None, delay=0):
     def retry_decorator(f):
