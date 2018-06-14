@@ -557,11 +557,7 @@ class SputterProcess(object):
         for element in sequence:
             assert isinstance(element, (list, dict))
 
-<<<<<<< HEAD
-    def sputter_sequence(self, sequence, startpoint=0, julabo_on=False):
-=======
     def sputter_sequence(self, sequence, startpoint=0, julabo_off=True):
->>>>>>> 624b1f2e035494caddbeff614e0466f97d9aa0fb
         self._check_sequence(sequence)
 
         self._julabo.on()
@@ -578,12 +574,8 @@ class SputterProcess(object):
             self._interrupt()
             self._logger.info("==> Sputter sequence: Finished sequence number %s of %s", i + 1, iterations)
             self._logger.info("==> Sputter sequence: with parameters --> %s", sequence[i])
-<<<<<<< HEAD
-        if julabo_on is False:
-=======
 
         if julabo_off is True:
->>>>>>> 624b1f2e035494caddbeff614e0466f97d9aa0fb
             self._julabo.off()
 
 def plasma_checker(device=None):
