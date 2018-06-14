@@ -456,11 +456,7 @@ class SputterProcess(object):
         self._logger.info("Pre-sputter process finished")
 
     def _sputter_ignition(self, ignition_pressure, pre_power, sputter, valve, ignition_wait_time=300):
-<<<<<<< HEAD
-        ignition_time = 10
-=======
         ignition_time = self._ignition_time
->>>>>>> 624b1f2e035494caddbeff614e0466f97d9aa0fb
 
         self._logger.info("Ignition process started")
         self._logger.info("--> Ignition parameter: Using ignition pressure %s (mbar)", ignition_pressure)
