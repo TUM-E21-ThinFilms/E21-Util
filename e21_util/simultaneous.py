@@ -2,8 +2,14 @@ import threading
 from e21_util.interruptor import Interruptor
 
 class StoppableThread(threading.Thread):
-    def __init__(self, interruptor: Interruptor=Interruptor()):
+    def __init__(self, interruptor=None):
         super(StoppableThread, self).__init__()
+        if interruptor is None:
+            interruptor = Interruptor()
+
+        if not isinstance(interruptor, Interruptor):
+            raise RuntimeError("interruptor not an instance of Interruptor")
+
         self._interruptor = interruptor
 
     def run(self):
