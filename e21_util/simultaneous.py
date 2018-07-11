@@ -1,5 +1,5 @@
 import threading
-from e21_util.interruptor import Interruptor
+from e21_util.interruptor import Interruptor, StopException
 
 class StoppableThread(threading.Thread):
     def __init__(self, interruptor=None):
