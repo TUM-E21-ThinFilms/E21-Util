@@ -34,6 +34,9 @@ def retry(retry_count=3, logger=None, catch=Exception, interruptor=None, delay=0
                         loc_logger.warning("Execution in retry clause will be aborted ...")
                         loc_logger.exception(e)
                         raise e
+                except KeyboardInterrupt as e:
+                    loc_logger.warning("KeyboardInterrupt found in retry loop (%s) of (%s). Terminate retry clause", i, retry_countr)
+                    raise e
                 except catch as e:
                     if not loc_logger is None:
                         loc_logger.warning("Catched exception in retry clause. Retry (%s) of (%s)", i, retry_count)

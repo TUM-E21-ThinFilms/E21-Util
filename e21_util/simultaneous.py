@@ -1,26 +1,21 @@
 import threading
+from e21_util.interruptor import Interruptor
 
-class Simultaneous(object):
-    def __init__(self):
-        self._threads = []
-        self._started = False
-
-    def add(self, function, *arguments):
-        if self._started:
-            raise RuntimeError("Cannot add threads to an already running scheduler")
-
-        thread = threading.Thread(target=function, args=arguments)
-        self._threads.append(thread)
+class StoppableThread(threading.Thread):
+    def __init__(self, interruptor: Interruptor=Interruptor()):
+        super(StoppableThread, self).__init__()
+        self._interruptor = interruptor
 
     def run(self):
-        self._started = True
+        while True:
+            self._interruptor.stoppable()
+            self.do_execute()
 
-        for thread in self._threads:
-            thread.start()
+    def is_running(self):
+        return not self._interruptor.is_stopped()
 
-    def join(self):
-        if not self._started:
-            raise RuntimeError("Scheduler not started yet")
+    def stop(self):
+        self._interruptor.stop()
 
-        for thread in self._threads:
-            thread.join()
+    def do_execute(self):
+        pass
