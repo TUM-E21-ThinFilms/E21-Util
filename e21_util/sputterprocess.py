@@ -385,6 +385,10 @@ class SputterProcess(object):
             self._logger.info("Closing valve")
             valve.close()
             self._logger.info("Turned off sputter device and closed valve.")
+            # might happen that the thread is faster than the off...
+            self._timer.sleep(1)
+            sputter.off()
+            valve.close()
         except BaseException as e:
             self._logger.critical(
                     "Exception while closing valve or turning sputter off. Turn these devices manually off!")
