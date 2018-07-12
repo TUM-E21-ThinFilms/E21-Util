@@ -21,4 +21,6 @@ class Paths(object):
     RAMDISK = "/run/media/ramdisk/lock"
     LOCK_DIR = RAMDISK
     HEIDENHAIN_LOCK_DIR = LOCK_DIR + "/heidenhain"
+    ENCODER_PATH = RAMDISK + "/encoder.save"
     CACHE_DIR = RAMDISK + "/cache/"
+

@@ -22,6 +22,10 @@ class StoppableThread(threading.Thread):
 
     def stop(self):
         self._interruptor.stop()
+        self._on_stop()
+
+    def _on_stop(self):
+        pass
 
     def do_execute(self):
         pass
