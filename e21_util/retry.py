@@ -30,12 +30,13 @@ def retry(retry_count=3, logger=None, catch=Exception, interruptor=None, delay=0
                     return f(self, *f_args, **f_kwargs)
                 except StopException as e:
                     if not loc_logger is None:
-                        loc_logger.warning("Catched StopExceotion in retry clause. Retry (%s) of (%s)", i, retry_count)
+                        loc_logger.warning("Catched StopException in retry clause. Retry (%s) of (%s)", i, retry_count)
                         loc_logger.warning("Execution in retry clause will be aborted ...")
                         loc_logger.exception(e)
-                        raise e
+                    raise e
                 except KeyboardInterrupt as e:
-                    loc_logger.warning("KeyboardInterrupt found in retry loop (%s) of (%s). Terminate retry clause", i, retry_countr)
+                    if not loc_logger is None:
+                        loc_logger.warning("KeyboardInterrupt found in retry loop (%s) of (%s). Terminate retry clause", i, retry_count)
                     raise e
                 except catch as e:
                     if not loc_logger is None:
