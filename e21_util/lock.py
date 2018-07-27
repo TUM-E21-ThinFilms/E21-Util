@@ -18,9 +18,13 @@ from paths import Paths
 
 LOCK_DIR = Paths.LOCK_DIR
 HEIDENHAIN_LOCK_DIR = Paths.HEIDENHAIN_LOCK_DIR
+ENCODER_LOCK_DIR = Paths.ENCODER_LOCK_DIR
 
 def HEIDENHAIN_LOCK():
     return fasteners.InterProcessLock(HEIDENHAIN_LOCK_DIR)
+
+def ENCODER_FILE_LOCK():
+    return fasteners.InterProcessLock(ENCODER_LOCK_DIR)
 
 class InterProcessTransportLock(fasteners.InterProcessLock):
     def __init__(self, transport, *args, **kwargs):
