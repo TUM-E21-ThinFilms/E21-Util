@@ -18,16 +18,18 @@ import logging
 from logging.handlers import WatchedFileHandler
 from e21_util.pvd.paths import Paths
 
+
 class PVDFileHandler(WatchedFileHandler):
     def __init__(self, filename):
         # The logs are placed in this folder, since a logrotate service is maintained here.
-        super(SputterFileHandler, self).__init__(Paths.LOG_PATH+filename)
+        super(SputterFileHandler, self).__init__(Paths.LOG_PATH + filename)
+
 
 def get_pvd_logger(name, filename):
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    fh = SputterFileHandler(filename)
+    fh = PVDFileHandler(filename)
     fh.setLevel(logging.DEBUG)
     fh.setFormatter(formatter)
     logger.addHandler(fh)
