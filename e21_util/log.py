@@ -16,7 +16,7 @@
 import sys
 import logging
 from logging.handlers import WatchedFileHandler
-from paths import Paths
+from e21_util.paths import Paths
 
 class SputterFileHandler(WatchedFileHandler):
     def __init__(self, filename):
