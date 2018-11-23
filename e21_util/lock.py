@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import fasteners
-from paths import Paths
+from e21_util.paths import Paths
 
 LOCK_DIR = Paths.LOCK_DIR
 HEIDENHAIN_LOCK_DIR = Paths.HEIDENHAIN_LOCK_DIR

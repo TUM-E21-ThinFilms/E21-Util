@@ -1,6 +1,6 @@
 import ConfigParser
 
-from paths import Paths
+from e21_util.paths import Paths
 
 class EmailConfig(object):
     def __init__(self):
