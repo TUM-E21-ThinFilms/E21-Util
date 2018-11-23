@@ -16,7 +16,7 @@
 import sys
 from setuptools import setup, find_packages
 
-requires = ['slave', 'fasteners', 'beaker', 'paths']
+requires = ['slave', 'fasteners', 'beaker']
 
 desc = ('Util library')
 
