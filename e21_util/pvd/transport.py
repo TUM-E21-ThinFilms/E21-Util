@@ -21,6 +21,7 @@ class Serial(serial.Serial):
         super(Serial, self).__init__(*args, **kwargs)
         self._name = ""
         self._buffer = bytearray()
+        self._max_bytes = 1024
 
     def set_name(self, name):
         self._name = name  # TODO
