@@ -21,7 +21,7 @@ class Serial(serial.Serial):
         super(Serial, self).__init__(*args, **kwargs)
         self._name = ""
         self._buffer = bytearray()
-        self._max_bytes = 1024
+        self._max_bytes = 32
 
     def set_name(self, name):
         self._name = name  # TODO
@@ -61,7 +61,7 @@ class Serial(serial.Serial):
     def read_until(self, delimiter):
         if delimiter in self._buffer:
             data, delimiter, self._buffer = self._buffer.partition(delimiter)
-            return data
+            return data + delimiter
         else:
             self._buffer += self.read(self._max_bytes)
             return self.read_until(delimiter)
