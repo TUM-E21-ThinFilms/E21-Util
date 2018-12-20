@@ -24,7 +24,7 @@ class Serial(serial.Serial):
         self._max_bytes = 32
 
     def set_name(self, name):
-        self._name = name  # TODO
+        self._name = name
 
     def get_name(self):
         return self._name

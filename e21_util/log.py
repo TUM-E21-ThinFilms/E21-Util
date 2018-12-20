@@ -23,6 +23,17 @@ class SputterFileHandler(WatchedFileHandler):
         # The logs are placed in this folder, since a logrotate service is maintained here.
         super(SputterFileHandler, self).__init__(Paths.LOG_PATH+filename)
 
+def get_logger(name, filename):
+    # TODO: must work for both, pvd and sputter pc!
+    logger = logging.getLogger(name)
+    logger.setLevel(logging.DEBUG)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    fh = SputterFileHandler(filename)
+    fh.setLevel(logging.DEBUG)
+    fh.setFormatter(formatter)
+    logger.addHandler(fh)
+    return logger
+
 def get_sputter_logger(name, filename):
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)
