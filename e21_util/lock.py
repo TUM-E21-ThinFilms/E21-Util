@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os
 import fasteners
 from e21_util.paths import Paths
 
@@ -28,5 +29,9 @@ def ENCODER_FILE_LOCK():
 
 class InterProcessTransportLock(fasteners.InterProcessLock):
     def __init__(self, transport, *args, **kwargs):
-        super(InterProcessTransportLock, self).__init__(LOCK_DIR + transport.get_name(), *args, **kwargs)
+        # according to http://www.pathname.com/fhs/pub/fhs-2.3.html#VARLOCKLOCKFILES
+        # lock files should be saved as
+        # /run/lock/LCK..ttyUSBxx
+        lock_file = LOCK_DIR + "/LCK.." + os.path.basename(transport.get_device())
+        super(InterProcessTransportLock, self).__init__(lock_file, *args, **kwargs)
 

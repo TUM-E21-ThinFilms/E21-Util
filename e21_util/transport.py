@@ -16,9 +16,12 @@
 import slave
 from slave.transport import Serial
 
+
+# TODO: change it to pyserial.Serial
+
 class Serial(slave.transport.Serial):
     def __init__(self, *args, **kwargs):
         super(Serial, self).__init__(*args, **kwargs)
 
-    def get_name(self):
+    def get_device(self):
         return self._serial.name

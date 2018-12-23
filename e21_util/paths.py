@@ -19,7 +19,7 @@ class Paths(object):
     EMAIL_CONFIG_PATH = "/home/sputter/Python/lib/config/email.config"
     LOG_PATH = "/var/log/sputter/"
     RAMDISK = "/run/media/ramdisk"
-    LOCK_DIR = RAMDISK + "/lock"
+    LOCK_DIR = "/run/lock"
     HEIDENHAIN_LOCK_DIR = LOCK_DIR + "/heidenhain"
     ENCODER_PATH = RAMDISK + "/encoder.save"
     ENCODER_LOCK_DIR = RAMDISK + "/encoder"
