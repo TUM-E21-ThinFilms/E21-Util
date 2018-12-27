@@ -33,7 +33,7 @@ class Ports(object):
     USB_TO_RS232_2 = (3, 2)
 
     DEVICE_TERRANOVA            = MOXA_16_PORT_1
-    DEVICE_RELAIS               = MOXA_16_PORT_2
+    DEVICE_RELAY                = MOXA_16_PORT_2
     DEVICE_PHYTRON              = MOXA_16_PORT_3
     DEVICE_PFEIFFER_GAUGE       = MOXA_16_PORT_4
     DEVICE_TURBO_VALVE          = MOXA_16_PORT_5

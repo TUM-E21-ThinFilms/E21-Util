@@ -18,31 +18,35 @@ import logging
 from logging.handlers import WatchedFileHandler
 from e21_util.paths import Paths
 
-class SputterFileHandler(WatchedFileHandler):
+
+class DeviceFileHandler(WatchedFileHandler):
     def __init__(self, filename):
         # The logs are placed in this folder, since a logrotate service is maintained here.
-        super(SputterFileHandler, self).__init__(Paths.LOG_PATH+filename)
+        super(DeviceFileHandler, self).__init__(Paths.LOG_PATH + filename)
+
 
 def get_logger(name, filename):
-    # TODO: must work for both, pvd and sputter pc!
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    fh = SputterFileHandler(filename)
+    fh = DeviceFileHandler(filename)
     fh.setLevel(logging.DEBUG)
     fh.setFormatter(formatter)
     logger.addHandler(fh)
     return logger
 
+
 def get_sputter_logger(name, filename):
+    # TODO: remove this method -> replaced by get_logger
     logger = logging.getLogger(name)
     logger.setLevel(logging.DEBUG)
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    fh = SputterFileHandler(filename)
+    fh = DeviceFileHandler(filename)
     fh.setLevel(logging.DEBUG)
     fh.setFormatter(formatter)
     logger.addHandler(fh)
     return logger
+
 
 def get_test_logger():
     logger = logging.getLogger('TEST')

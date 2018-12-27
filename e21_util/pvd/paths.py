@@ -15,7 +15,7 @@
 
 
 class Paths(object):
-    LOG_PATH = "/var/log/pvd/"
+    LOG_PATH = "/var/log/device/"
     RAMDISK = "/run/media/ramdisk"
     LOCK_DIR = RAMDISK + "/lock"
     CACHE_DIR = RAMDISK + "/cache/"
