@@ -13,7 +13,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import serial
+from serial import SerialTimeoutException
+
+from e21_util.lock import InterProcessTransportLock
 
 
 class Serial(serial.Serial):
@@ -21,12 +23,22 @@ class Serial(serial.Serial):
         super(Serial, self).__init__(*args, **kwargs)
         self._name = ""
         self._buffer = bytearray()
-        self._max_bytes = 32
+        self._max_bytes = 1
+        self._lock = InterProcessTransportLock(self)
 
-    def set_name(self, name):
-        self._name = name
+    def set_lock(self, lock):
+        self._lock = lock
 
-    def get_name(self):
+    def get_lock(self):
+        return self._lock
+
+    def __enter__(self):
+        self._lock.acquire()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self._lock.release()
+
+    def get_device(self):
         return self._name
 
     def write(self, data, encoding='ascii'):
@@ -36,14 +48,17 @@ class Serial(serial.Serial):
         if isinstance(data, str):
             msg = bytearray(data, encoding)
         elif isinstance(data, bytearray):
-            msg = data
+            pass
         else:
             raise RuntimeError("Unknown data given")
 
         return super(Serial, self).write(msg)
 
     def read(self, num_bytes):
-        return super(Serial, self).read(num_bytes)
+        data = super(Serial, self).read(num_bytes)
+        if len(data) == 0:
+            raise serial.SerialTimeoutException()
+        return data
 
     def read_bytes(self, num_bytes):
 
