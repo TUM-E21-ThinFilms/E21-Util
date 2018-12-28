@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import serial
 from serial import SerialTimeoutException
 
 from e21_util.lock import InterProcessTransportLock
@@ -57,7 +58,7 @@ class Serial(serial.Serial):
     def read(self, num_bytes):
         data = super(Serial, self).read(num_bytes)
         if len(data) == 0:
-            raise serial.SerialTimeoutException()
+            raise SerialTimeoutException()
         return data
 
     def read_bytes(self, num_bytes):
