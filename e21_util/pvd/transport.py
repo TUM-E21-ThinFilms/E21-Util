@@ -17,9 +17,10 @@ import serial
 from serial import SerialTimeoutException
 
 from e21_util.lock import InterProcessTransportLock
+from e21_util.transport import AbstractTransport
 
 
-class Serial(serial.Serial):
+class Serial(serial.Serial, AbstractTransport):
     def __init__(self, *args, **kwargs):
         super(Serial, self).__init__(*args, **kwargs)
         self._name = ""
@@ -34,9 +35,12 @@ class Serial(serial.Serial):
         return self._lock
 
     def __enter__(self):
+        super(Serial, self).__enter__()
         self._lock.acquire()
+        return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
+        # do not call super __exit__, the serial connection should not be closed
         self._lock.release()
 
     def get_device(self):
@@ -62,7 +66,6 @@ class Serial(serial.Serial):
         return data
 
     def read_bytes(self, num_bytes):
-
         buffer_size = len(self._buffer)
         if buffer_size > num_bytes:
             data, self._buffer = self._buffer[:num_bytes], self._buffer[num_bytes:]
