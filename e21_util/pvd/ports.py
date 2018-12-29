@@ -33,15 +33,22 @@ class Ports(object):
     MOXA_16_PORT_15 = (1, 15)
     MOXA_16_PORT_16 = (1, 16)
 
+    RASPBERRYPI_SERIAL = (2, 1)
+
     DEVICE_MKS_GAS_FLOW = MOXA_16_PORT_15
+    DEVICE_RELAY = RASPBERRYPI_SERIAL
+
 
     def __init__(self):
         pass
 
     def get_port(self, device):
         assert isinstance(device, tuple)
-        assert 0 <= device[0] <= 1
+        assert 0 <= device[0] <= 2
         assert 0 <= device[1] <= 16
+
+        if device == self.RASPBERRYPI_SERIAL:
+            return "/dev/serial0"
 
         if device[0] == 0 or device[1] == 0:
             raise RuntimeError("Given device is currently not connected")
