@@ -22,7 +22,7 @@ class Ports(AbstractPorts):
     DEVICE_TERRANOVA = 'Terranova'
 
     def get_default_factory(self):
-        return SerialFactory(ConfigParser('e21_util/config/insitu.yml'))
+        return SerialFactory(ConfigParser('config/insitu.yml'))
 
 
 class SerialFactory(SerialFactory):
