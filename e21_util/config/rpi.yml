@@ -1,0 +1,18 @@
+Devices:
+  - Relay:
+      - Baudrate: 19200
+      - Parity: None
+      - Databits: 8
+      - Stopbits: 1
+      - Timeout: 0.03
+
+Connections:
+ - NOT CONNECTED:
+     - Type: Not Connected
+     - Ports:
+         - 1: None
+
+ - Mapping:
+     - Type: Mapping
+     - Ports:
+       - /dev/serial0: Relay

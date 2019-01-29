@@ -13,6 +13,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from e21_util.serialports import ConfigParser
+
 class Ports(object):
     NOT_CONNECTED = (0, 0)
 
@@ -37,6 +39,7 @@ class Ports(object):
 
     DEVICE_MKS_GAS_FLOW = MOXA_16_PORT_15
     DEVICE_RELAY = RASPBERRYPI_SERIAL
+    DEVICE_CESAR = MOXA_16_PORT_13
 
 
     def __init__(self):

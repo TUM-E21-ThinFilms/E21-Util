@@ -1,0 +1,23 @@
+Devices:
+  - Cesar:
+      - Baudrate: 19200
+      - Parity: Odd
+      - Stopbits: 1
+      - Databits: 8
+      - Timeout: 1
+  - MKS Gas flow:
+      - Baudrate: 9600
+      - Parity: Even
+      - Databits: 8
+      - Stopbits: 1
+      - Timeout: 1
+
+Connections:
+ - NOT CONNECTED:
+     - Type: Not Connected
+
+ - Moxa:
+     - Type: Moxa-16
+     - Ports:
+       - 13: Cesar
+       - 15: MKS Gas flow

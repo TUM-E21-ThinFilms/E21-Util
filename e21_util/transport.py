@@ -15,20 +15,7 @@
 
 import slave
 from slave.transport import Serial
-
-
-class AbstractTransport(object):
-    def read_until(self, delimiter):
-        raise NotImplementedError()
-
-    def read_bytes(self, num_bytes):
-        raise NotImplementedError()
-
-    def read(self, num_bytes):
-        raise NotImplementedError()
-
-    def write(self, data, encoding='ascii'):
-        raise NotImplementedError()
+from e21_util.serial_connection import AbstractTransport
 
 
 # TODO: change it to pyserial.Serial
