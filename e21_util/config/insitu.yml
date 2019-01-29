@@ -1,0 +1,28 @@
+Devices:
+
+  - Terranova:
+    - Baudrate: 9600
+    - Parity: None
+    - Stopbits: 1
+    - Databits: 8
+    - Timeout: 0.2
+
+Connections:
+  - NOT CONNECTED:
+    - Type: Not Connected
+
+  - Moxa 1:
+    - Type: Moxa-16
+    - Ports:
+      -  1: Terranova
+      - 15: MKS Gas flow
+
+  - Moxa 2:
+    - Type: Moxa-8
+    - Ports:
+      -
+
+  - USB to RS232:
+    - Type: USB
+    - Ports:
+      -

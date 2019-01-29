@@ -54,7 +54,7 @@ class ConfigParser(object):
     }
 
     CONNECTION_TYPE_NOT_CONNECTED = 'Not Connected'
-    CONNECTION_TYPE_USB2RS232 = 'USB to RS232'
+    CONNECTION_TYPE_USB2RS232 = 'USB'
     CONNECTION_TYPE_MAPPING = 'Mapping'
     CONNECTION_TYPE_MOXA16 = 'Moxa-16'
     CONNECTION_TYPE_MOXA8 = 'Moxa-8'
@@ -98,6 +98,7 @@ class ConfigParser(object):
         self._file = file
         self._devices = []
         self._connections = []
+        self._has_parsed = False
 
     def parse(self):
         with open(self._file, 'r') as stream:
@@ -109,6 +110,11 @@ class ConfigParser(object):
         # Now attach for every device a connection. We can check at the same time, that every device has exactly ONE
         # connection.
         self._connect_devices()
+
+        self._has_parsed = True
+
+    def has_parsed(self):
+        return self._has_parsed
 
     def _connect_devices(self):
         for dev in self._devices:
@@ -350,7 +356,7 @@ class MappingConnection(object):
 
         for mapping in self._config[ConfigParser.KEY_CONNECTION_DEVICE_MAPPING]:
             if mapping[0] == dev_index:
-                return mapping[1]
+                return int(mapping[1])
 
         # This is in principle not going to happen
         raise RuntimeError("No mapping definition found for device '{}' in connection '{}'".format(name, self._config[
@@ -406,6 +412,8 @@ class SerialFactory(object):
         assert isinstance(config_parser, ConfigParser)
 
         self._parser = config_parser
+        if not self._parser.has_parsed():
+            self._parser.parse()
 
     def get_path(self, name):
         raise NotImplementedError()
@@ -420,37 +428,7 @@ class SerialFactory(object):
                       config[ConfigParser.KEY_TIMEOUT])
 
 
-class InSituSerialFactory(SerialFactory):
-    CONNECTION_MOXA_16 = 'Moxa 1'
-    CONNECTION_MOXA_8 = 'Moxa 2'
-    CONNECTION_NOT_CONNECTED = 'Not Connected'
-    CONNECTION_USB_2_RS232 = 'USB to RS232'
 
-    OFFSET_MOXA_16 = 1
-    OFFSET_MOXA_8 = 17
-
-    def __init__(self, config_parser):
-        super(InSituSerialFactory, self).__init__(config_parser)
-
-        self._moxa16 = MoxaConnection(config_parser.get_connection(self.CONNECTION_MOXA_16), self.OFFSET_MOXA_16)
-        self._moxa8 = MoxaConnection(config_parser.get_connection(self.CONNECTION_MOXA_8), self.OFFSET_MOXA_8)
-        self._usb = USBToRS232Connection(config_parser.get_connection(self.CONNECTION_USB_2_RS232))
-        self._nc = NotConnectedConnection()
-
-    def get_path(self, name):
-        connection = self._parser.get_connection_for_device(name)
-        con_name = connection[ConfigParser.KEY_NAME]
-
-        if con_name == self.CONNECTION_MOXA_16:
-            return self._moxa16.get_port(name)
-        elif con_name == self.CONNECTION_MOXA_8:
-            return self._moxa8.get_port(name)
-        elif con_name == self.CONNECTION_USB_2_RS232:
-            return self._usb.get_port(name)
-        elif con_name == self.CONNECTION_NOT_CONNECTED:
-            return self._nc.get_port(name)
-        else:
-            raise RuntimeError("Unknown connection {} specified for device {}".format(con_name, name))
 
 
 class BigChamberSerialFactory(SerialFactory):
@@ -495,13 +473,3 @@ class BigChamberRPiSerialFactory(SerialFactory):
             return self._nc.get_port(name)
         else:
             raise RuntimeError("Unknown connection {} specified for device {}".format(con_name, name))
-
-
-
-
-def get_serial_factory(type):
-    if type is
-    parser = ConfigParser('e21_util/config/pvd.yml')
-    parser.parse()
-    fac = BigChamberSerialFactory(parser)
-
