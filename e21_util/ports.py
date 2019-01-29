@@ -1,5 +1,5 @@
 from e21_util.serialports import BigChamberSerialFactory, BigChamberRPiSerialFactory
-
+from e21_util.port.ports import AbstractPorts
 
 class Ports(object):
     NOT_CONNECTED = (0, 0)
@@ -89,20 +89,7 @@ class Ports(object):
         return "/dev/ttyUSB" + str(number)
 
 
-class AbstractPorts(object):
-    def __init__(self, factory=None):
-        if factory is None:
-            factory = self.get_default_factory()
 
-        assert isinstance(factory, SerialFactory)
-
-        self._factory = factory
-
-    def get_default_factory(self):
-        return None
-
-    def get_transport(self, name):
-        return self._factory.get_transport(name)
 
 
 class BigChamberPorts(AbstractPorts):
