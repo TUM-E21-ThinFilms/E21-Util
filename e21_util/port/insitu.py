@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from e21_util.serialports import SerialFactory
+from e21_util.serialports import SerialFactory, ConfigParser
 from e21_util.serial_connection import AbstractTransport
 from e21_util.port.ports import AbstractPorts
 
