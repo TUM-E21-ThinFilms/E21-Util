@@ -13,13 +13,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from e21_util.serialports import AbstractSerialFactory
+
 
 class AbstractPorts(object):
     def __init__(self, factory=None):
         if factory is None:
             factory = self.get_default_factory()
 
-        assert isinstance(factory, SerialFactory)
+        assert isinstance(factory, AbstractSerialFactory)
 
         self._factory = factory
 
@@ -62,9 +64,9 @@ class Ports(object):
     USB_TO_RS232_1 = (3, 1)
     USB_TO_RS232_2 = (3, 2)
 
-    #DEVICE_TERRANOVA = MOXA_16_PORT_1
-    #DEVICE_RELAY = MOXA_16_PORT_2
-    #DEVICE_PHYTRON = MOXA_16_PORT_3
+    # DEVICE_TERRANOVA = MOXA_16_PORT_1
+    # DEVICE_RELAY = MOXA_16_PORT_2
+    # DEVICE_PHYTRON = MOXA_16_PORT_3
     DEVICE_PFEIFFER_GAUGE = MOXA_16_PORT_4
     DEVICE_TURBO_VALVE = MOXA_16_PORT_5
     DEVICE_MOTOR_Z = MOXA_16_PORT_6
@@ -116,6 +118,7 @@ class Ports(object):
         number = (device[0] - 1) * 16 + (device[1])
 
         return "/dev/ttyUSB" + str(number)
+
 
 class BigChamberRPiPorts(AbstractPorts):
     DEVICE_RELAY = 'Relay'

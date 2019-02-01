@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from e21_util.serialports import SerialFactory, ConfigParser
+from e21_util.serialports import AbstractSerialFactory, ConfigParser
 from e21_util.serial_connection import AbstractTransport
 from e21_util.ports import AbstractPorts
 from e21_util.serialports import MoxaConnection, MappingConnection, NotConnectedConnection
@@ -25,7 +25,7 @@ class Connection(AbstractPorts):
         return SerialFactory(ConfigParser('/etc/e21/pvd.yml'))
 
 
-class SerialFactory(SerialFactory):
+class SerialFactory(AbstractSerialFactory):
     CONNECTION_MOXA = 'Moxa'
 
     OFFSET_MOXA = 0

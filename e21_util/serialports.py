@@ -407,7 +407,7 @@ class NotConnectedConnection(object):
         raise RuntimeError("The device {} is not connected".format(name))
 
 
-class SerialFactory(object):
+class AbstractSerialFactory(object):
     def __init__(self, config_parser):
         assert isinstance(config_parser, ConfigParser)
 
