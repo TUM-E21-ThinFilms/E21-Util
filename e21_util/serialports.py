@@ -428,12 +428,7 @@ class AbstractSerialFactory(object):
                       config[ConfigParser.KEY_TIMEOUT])
 
 
-
-
-
-
-
-class BigChamberRPiSerialFactory(SerialFactory):
+class BigChamberRPiSerialFactory(AbstractSerialFactory):
     CONNECTION_MAPPING = 'Mapping'
 
     def __init__(self, config_parser):
