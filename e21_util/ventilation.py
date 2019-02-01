@@ -5,7 +5,7 @@ import logging
 from devcontroller.misc.thread import StoppableThread
 from devcontroller.gun import GunController
 from devcontroller.vat import VATController
-from devcontroller.relais import RelaisController
+from devcontroller.relay import RelaisController
 from tpg26x.driver import PfeifferTPG26xDriver
 from devcontroller.turbovat import TurboVATController
 from devcontroller.turbo import TurboController

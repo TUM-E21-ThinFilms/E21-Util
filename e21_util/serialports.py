@@ -431,27 +431,6 @@ class SerialFactory(object):
 
 
 
-class BigChamberSerialFactory(SerialFactory):
-    CONNECTION_MOXA = 'Moxa'
-
-    OFFSET_MOXA = 0
-
-    def __init__(self, config_parser):
-        super(BigChamberSerialFactory, self).__init__(config_parser)
-
-        self._moxa = MoxaConnection(config_parser.get_connection(self.CONNECTION_MOXA), self.OFFSET_MOXA)
-        self._nc = NotConnectedConnection()
-
-    def get_path(self, name):
-        connection = self._parser.get_connection_for_device(name)
-        con_name = connection[ConfigParser.KEY_NAME]
-
-        if con_name == self.CONNECTION_MOXA:
-            return self._moxa.get_port(name)
-        elif con_name == self.CONNECTION_NOT_CONNECTED:
-            return self._nc.get_port(name)
-        else:
-            raise RuntimeError("Unknown connection {} specified for device {}".format(con_name, name))
 
 
 class BigChamberRPiSerialFactory(SerialFactory):

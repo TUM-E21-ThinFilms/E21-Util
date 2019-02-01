@@ -7,6 +7,20 @@ Devices:
     - Databits: 8
     - Timeout: 0.2
 
+  - Relay:
+    - Baudrate: 19200
+    - Parity: None
+    - Stopbits: 1
+    - Databits: 8
+    - Timeout: 1
+
+  - Phymotion:
+    - Baudrate: 115200
+    - Parity: None
+    - Stopbits: 1
+    - Databits: 8
+    - Timeout: 0.5
+
 Connections:
   - NOT CONNECTED:
     - Type: Not Connected
@@ -15,7 +29,8 @@ Connections:
     - Type: Moxa-16
     - Ports:
       -  1: Terranova
-      - 15: MKS Gas flow
+      -  2: Relay
+      -  3: Phymotion
 
   - Moxa 2:
     - Type: Moxa-8

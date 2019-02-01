@@ -1,5 +1,21 @@
 from e21_util.serialports import BigChamberSerialFactory, BigChamberRPiSerialFactory
-from e21_util.port.ports import AbstractPorts
+
+
+class AbstractPorts(object):
+    def __init__(self, factory=None):
+        if factory is None:
+            factory = self.get_default_factory()
+
+        assert isinstance(factory, SerialFactory)
+
+        self._factory = factory
+
+    def get_default_factory(self):
+        return None
+
+    def get_transport(self, name):
+        return self._factory.get_transport(name)
+
 
 class Ports(object):
     NOT_CONNECTED = (0, 0)
@@ -33,9 +49,9 @@ class Ports(object):
     USB_TO_RS232_1 = (3, 1)
     USB_TO_RS232_2 = (3, 2)
 
-    DEVICE_TERRANOVA = MOXA_16_PORT_1
-    DEVICE_RELAY = MOXA_16_PORT_2
-    DEVICE_PHYTRON = MOXA_16_PORT_3
+    #DEVICE_TERRANOVA = MOXA_16_PORT_1
+    #DEVICE_RELAY = MOXA_16_PORT_2
+    #DEVICE_PHYTRON = MOXA_16_PORT_3
     DEVICE_PFEIFFER_GAUGE = MOXA_16_PORT_4
     DEVICE_TURBO_VALVE = MOXA_16_PORT_5
     DEVICE_MOTOR_Z = MOXA_16_PORT_6
@@ -87,18 +103,6 @@ class Ports(object):
         number = (device[0] - 1) * 16 + (device[1])
 
         return "/dev/ttyUSB" + str(number)
-
-
-
-
-
-class BigChamberPorts(AbstractPorts):
-    DEVICE_CESAR = 'Cesar'
-    DEVICE_GAS_FLOW = 'MKS Gas flow'
-
-    def get_default_factory(self):
-        return BigChamberSerialFactory(ConfigParser('e21_util/config/pvd.yml'))
-
 
 class BigChamberRPiPorts(AbstractPorts):
     DEVICE_RELAY = 'Relay'

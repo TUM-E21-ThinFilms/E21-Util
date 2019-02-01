@@ -15,14 +15,14 @@
 
 from e21_util.serialports import SerialFactory, ConfigParser
 from e21_util.serial_connection import AbstractTransport
-from e21_util.port.ports import AbstractPorts
+from e21_util.ports import AbstractPorts
+from e21_util.serialports import MoxaConnection, MappingConnection, NotConnectedConnection, USBToRS232Connection
 
 
-class Ports(AbstractPorts):
-    DEVICE_TERRANOVA = 'Terranova'
+class Connection(AbstractPorts):
 
     def get_default_factory(self):
-        return SerialFactory(ConfigParser('../config/insitu.yml'))
+        return SerialFactory(ConfigParser('/etc/e21/insitu.yml'))
 
 
 class SerialFactory(SerialFactory):
