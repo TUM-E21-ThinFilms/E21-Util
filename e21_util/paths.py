@@ -25,3 +25,9 @@ class Paths(object):
     ENCODER_LOCK_DIR = RAMDISK + "/encoder"
     CACHE_DIR = RAMDISK + "/cache/"
 
+    CONFIG_PATH = '/etc/e21/'
+    CONFIG_INSITU_PATH = CONFIG_PATH + 'in-situ/'
+
+    SERIAL_PORT_PVD = CONFIG_PATH + 'pvd.yml'
+    SERIAL_PORT_INSITU = CONFIG_PATH + 'insitu.yml'
+

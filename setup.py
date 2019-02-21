@@ -13,22 +13,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys
 from setuptools import setup, find_packages
-
-requires = ['slave', 'fasteners', 'beaker']
-
-desc = ('Util library')
 
 setup(
     name='e21_util',
     version=__import__('e21_util').__version__,
     author='Alexander Book',
     author_email='alexander.book@frm2.tum.de',
-    license = 'GNU General Public License (GPL), Version 3',
+    license='GNU General Public License (GPL), Version 3',
     url='https://github.com/TUM-E21-ThinFilms/E21-Util',
-    description=desc,
+    description='Util library',
     packages=find_packages(),
     include_package_data=True,
-    install_requires=requires,
+    install_requires=['slave', 'fasteners', 'beaker'],
 )

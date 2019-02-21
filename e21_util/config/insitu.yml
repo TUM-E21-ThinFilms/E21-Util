@@ -1,25 +1,46 @@
 Devices:
 
   - Terranova:
-    - Baudrate: 9600
-    - Parity: None
-    - Stopbits: 1
-    - Databits: 8
-    - Timeout: 0.2
+      - Baudrate: 9600
+      - Parity: None
+      - Stopbits: 1
+      - Databits: 8
+      - Timeout: 0.2
 
   - Relay:
-    - Baudrate: 19200
-    - Parity: None
-    - Stopbits: 1
-    - Databits: 8
-    - Timeout: 1
+      - Baudrate: 19200
+      - Parity: None
+      - Stopbits: 1
+      - Databits: 8
+      - Timeout: 0.2
 
   - Phymotion:
-    - Baudrate: 115200
-    - Parity: None
-    - Stopbits: 1
-    - Databits: 8
-    - Timeout: 0.5
+      - Baudrate: 115200
+      - Parity: None
+      - Stopbits: 1
+      - Databits: 8
+      - Timeout: 0.5
+
+  - Gun_Motor:
+      - Baudrate: 9600
+      - Parity: None
+      - Stopbits: 1
+      - Databits: 8
+      - Timeout: 0.5
+
+  - X_Motor:
+      - Baudrate: 9600
+      - Parity: None
+      - Stopbits: 1
+      - Databits: 8
+      - Timeout: 0.5
+
+  - Z_Motor:
+      - Baudrate: 9600
+      - Parity: None
+      - Stopbits: 1
+      - Databits: 8
+      - Timeout: 0.5
 
 Connections:
   - NOT CONNECTED:
@@ -31,6 +52,9 @@ Connections:
       -  1: Terranova
       -  2: Relay
       -  3: Phymotion
+      -  6: Z_Motor
+      -  7: X_Motor
+      -  8: Gun_Motor
 
   - Moxa 2:
     - Type: Moxa-8

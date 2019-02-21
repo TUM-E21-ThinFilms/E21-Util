@@ -18,3 +18,6 @@ class Devices(object):
     DEVICE_TERRANOVA = 'Terranova'
     DEVICE_RELAY = 'Relay'
     DEVICE_THETA = 'Phymotion'
+    DEVICE_GUN = 'Gun_Motor'
+    DEVICE_X_MOTOR = 'X_Motor'
+    DEVICE_Z_MOTOR = 'Z_Motor'

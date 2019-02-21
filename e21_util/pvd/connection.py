@@ -17,12 +17,13 @@ from e21_util.serialports import AbstractSerialFactory, ConfigParser
 from e21_util.serial_connection import AbstractTransport
 from e21_util.ports import AbstractPorts
 from e21_util.serialports import MoxaConnection, MappingConnection, NotConnectedConnection
+from e21_util.paths import Paths
 
 
 class Connection(AbstractPorts):
 
     def get_default_factory(self):
-        return SerialFactory(ConfigParser('/etc/e21/pvd.yml'))
+        return SerialFactory(ConfigParser(Paths.SERIAL_PORT_PVD))
 
 
 class SerialFactory(AbstractSerialFactory):
