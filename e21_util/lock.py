@@ -32,6 +32,6 @@ class InterProcessTransportLock(fasteners.InterProcessLock):
         # according to http://www.pathname.com/fhs/pub/fhs-2.3.html#VARLOCKLOCKFILES
         # lock files should be saved as
         # /run/lock/LCK..ttyUSBxx
-        lock_file = LOCK_DIR + "/LCK.." + os.path.basename(transport.get_device())
+        lock_file = LOCK_DIR + "LCK.." + os.path.basename(transport.get_device())
         super(InterProcessTransportLock, self).__init__(lock_file, *args, **kwargs)
 

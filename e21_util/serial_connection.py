@@ -34,6 +34,7 @@ class AbstractTransport(object):
         raise NotImplementedError()
 
     def read(self, num_bytes):
+        # Returns bytearray
         raise NotImplementedError()
 
     def write(self, data, encoding='ascii'):
@@ -43,7 +44,6 @@ class AbstractTransport(object):
 class Serial(AbstractSerial, AbstractTransport):
     def __init__(self, *args, **kwargs):
         super(Serial, self).__init__(*args, **kwargs)
-        self._name = ""
         self._buffer = bytearray()
         self._max_bytes = 1
         self._lock = InterProcessTransportLock(self)
@@ -64,7 +64,7 @@ class Serial(AbstractSerial, AbstractTransport):
         self._lock.release()
 
     def get_device(self):
-        return self._name
+        return self._port
 
     def write(self, data, encoding='ascii'):
 
