@@ -20,13 +20,15 @@ class Paths(object):
     LOG_PATH = "/var/log/device/"
     RAMDISK = "/run/media/ramdisk"
 
-    HEIDENHAIN_LOCK_DIR = LOCK_DIR + "/heidenhain"
+
     ENCODER_PATH = RAMDISK + "/encoder.save"
     ENCODER_LOCK_DIR = RAMDISK + "/encoder"
     CACHE_DIR = RAMDISK + "/cache/"
 
     CONFIG_PATH = '/etc/e21/'
     LOCK_DIR = CONFIG_PATH + "lock/"
+    HEIDENHAIN_LOCK_DIR = LOCK_DIR + "/heidenhain"
+
     CONFIG_INSITU_PATH = CONFIG_PATH + 'in-situ/'
 
     SERIAL_PORT_PVD = CONFIG_PATH + 'pvd.yml'
