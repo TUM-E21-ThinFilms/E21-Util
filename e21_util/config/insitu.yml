@@ -42,6 +42,14 @@ Devices:
       - Databits: 8
       - Timeout: 0.5
 
+  # Edwards Scroll pump
+  - nXDS15i:
+      - Baudrate: 9600
+      - Parity: None
+      - Stopbits: 1
+      - Databits: 8
+      - Timeout: 1
+
 Connections:
   - NOT CONNECTED:
     - Type: Not Connected
@@ -59,7 +67,7 @@ Connections:
   - Moxa 2:
     - Type: Moxa-8
     - Ports:
-      -
+        - 8: nXDS15i
 
   - USB to RS232:
     - Type: USB

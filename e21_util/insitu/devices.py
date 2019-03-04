@@ -21,3 +21,4 @@ class Devices(object):
     DEVICE_GUN = 'Gun_Motor'
     DEVICE_X_MOTOR = 'X_Motor'
     DEVICE_Z_MOTOR = 'Z_Motor'
+    DEVICE_SCROLL = 'nXDS15i'
