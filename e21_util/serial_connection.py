@@ -79,7 +79,9 @@ class Serial(AbstractSerial, AbstractTransport):
         else:
             raise RuntimeError("Unknown data given")
 
-        return super(Serial, self).write(msg)
+        ret = super(Serial, self).write(msg)
+        self.flush()
+        return ret
 
     def read(self, num_bytes):
         data = super(Serial, self).read(num_bytes)
