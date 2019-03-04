@@ -1,7 +1,9 @@
 import time
 from functools import wraps
 from e21_util.interface import Loggable, Interruptable
-from e21_util.interruptor import StopException, InterruptableTimer, Interruptor, DummyTimer
+from e21_util.timer import InterruptableTimer, DummyTimer
+from e21_util.interruptor import StopException, Interruptor
+
 
 def retry(retry_count=3, logger=None, catch=Exception, interruptor=None, delay=0):
     def retry_decorator(f):
@@ -36,7 +38,8 @@ def retry(retry_count=3, logger=None, catch=Exception, interruptor=None, delay=0
                     raise e
                 except KeyboardInterrupt as e:
                     if not loc_logger is None:
-                        loc_logger.warning("KeyboardInterrupt found in retry loop (%s) of (%s). Terminate retry clause", i, retry_count)
+                        loc_logger.warning("KeyboardInterrupt found in retry loop (%s) of (%s). Terminate retry clause",
+                                           i, retry_count)
                     raise e
                 except catch as e:
                     if not loc_logger is None:
