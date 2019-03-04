@@ -2,8 +2,12 @@ import threading
 import time
 import datetime
 
+from e21_util.timer import InterruptableTimer, AbstractTimer
+
+
 class StopException(Exception):
     pass
+
 
 class Interruptor(object):
     def __init__(self):
@@ -15,48 +19,61 @@ class Interruptor(object):
     def is_stopped(self):
         return self._event.is_set()
 
+    def is_running(self):
+        return not self._event.is_set()
+
     def stoppable(self):
         if self.is_stopped():
             raise StopException()
 
-class InterruptableTimer(object):
-    def __init__(self, interrupt, steps=1):
-        self._t = 0
-        self._interrupt = interrupt
-        if steps <= 0:
-            raise RuntimeError("time steps must be positive")
 
-        self._steps = steps
+class InterruptableThread(threading.Thread):
+    def __init__(self, interruptor):
+        threading.Thread.__init__(self)
+        self._interruptor = None
+        self.set_interruptor(interruptor)
 
-    def sleep(self, time_sec):
-        while time_sec > self._steps:
-            self._interrupt.stoppable()
-            time.sleep(self._steps)
-            time_sec -= self._steps
+    def run(self):
+        while self.is_running():
+            self.do_execute()
 
-        time.sleep(time_sec)
-        self._interrupt.stoppable()
+    def is_running(self):
+        return self._interruptor.is_running()
 
-    def sleep_til(self, timestamp, logger, interval=15):
-        logger.info("Sleep until %s ...", datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S'))
-        while True:
-            stoppable(self._interrupt)
-            cur_time = time.time()
-            if cur_time >= timestamp:
-                break
-            time.sleep(interval)
-            logger.info("Current time: %s, goal: %s, diff in minutes %s", cur_time, timestamp, (timestamp - cur_time) / 60.0)
+    def stop(self):
+        self._interruptor.stop()
 
+    def get_interruptor(self):
+        return self._interruptor
 
-class DummyTimer(object):
-    def sleep(self, time_sec):
+    def set_interruptor(self, interruptor):
+        assert isinstance(interruptor, Interruptor)
+        self._interruptor = interruptor
+
+    def do_execute(self):
         pass
 
-    def sleep_til(self):
-        pass
+    def stoppable(self):
+        self._interruptor.stoppable()
 
-'''
-    @:raises StopException
-'''
+
+class InterruptableTimerThread(InterruptableThread):
+    def __init__(self, interruptor, timer):
+        super(InterruptableTimerThread, self).__init__(interruptor)
+        self._timer = None
+        self.set_timer(timer)
+
+    def set_timer(self, timer):
+        assert isinstance(timer, AbstractTimer)
+        self._timer = timer
+
+    def set_interruptor(self, interruptor):
+        super(InterruptableTimerThread, self).set_interruptor(interruptor)
+        self._timer.set_interruptor(interruptor)
+
+
 def stoppable(interrupt):
+    '''
+        @:raises StopException
+    '''
     interrupt.stoppable()

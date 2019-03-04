@@ -74,6 +74,8 @@ class Serial(AbstractSerial, AbstractTransport):
             msg = bytearray(data, encoding)
         elif isinstance(data, bytearray):
             pass
+        elif isinstance(data, byte):
+            pass
         else:
             raise RuntimeError("Unknown data given")
 
