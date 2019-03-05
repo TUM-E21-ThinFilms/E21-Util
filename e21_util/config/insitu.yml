@@ -64,6 +64,14 @@ Devices:
       - Databits: 8
       - Timeout: 0.5
 
+  - Julabo:
+      - Baudrate: 4800
+      - Parity: Even
+      - Stopbits: 1
+      - Databits: 7
+      - Timeout: 0.4
+
+
 Connections:
   - NOT CONNECTED:
     - Type: Not Connected
@@ -79,6 +87,7 @@ Connections:
       -  7: X_Motor
       -  8: Gun_Motor
       - 10: Gauge_Cryo
+      - 15: Julabo
 
   - Moxa 2:
     - Type: Moxa-8

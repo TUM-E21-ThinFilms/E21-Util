@@ -24,3 +24,4 @@ class Devices(object):
     DEVICE_SCROLL = 'nXDS15i'
     DEVICE_GAUGE_MAIN_CHAMBER = 'Gauge_Main'
     DEVICE_GAUGE_CRYO = 'Gauge_Cryo'
+    DEVICE_JULABO = 'Julabo'
