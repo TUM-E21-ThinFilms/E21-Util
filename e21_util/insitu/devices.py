@@ -27,3 +27,5 @@ class Devices(object):
     DEVICE_JULABO = 'Julabo'
     DEVICE_LEAK_VALVE_ARGON = 'Valve_Argon'
     DEVICE_LEAK_VALVE_OXYGEN = 'Valve_Oxygen'
+    DEVICE_DC_SPUTTER_1 = 'DC_Sputter_A'
+    DEVICE_DC_SPUTTER_2 = 'DC_Sputter_B'

@@ -85,31 +85,47 @@ Devices:
       - Databits: 7
       - Timeout: 0.2
 
+  # ADL Device A
+  - DC_Sputter_A:
+      - Baudrate: 9600
+      - Parity: Even
+      - Stopbits: 1
+      - Databits: 8
+      - Timeout: 0.05
+
+  # ADL Device B
+  - DC_Sputter_B:
+      - Baudrate: 9600
+      - Parity: Even
+      - Stopbits: 1
+      - Databits: 8
+      - Timeout: 0.05
+
 Connections:
   - NOT CONNECTED:
-    - Type: Not Connected
+      - Type: Not Connected
 
   - Moxa 1:
-    - Type: Moxa-16
-    - Ports:
-      -  1: Terranova
-      -  2: Relay
-      -  3: Phymotion
-      -  4: Gauge_Main
-      -  6: Z_Motor
-      -  7: X_Motor
-      -  8: Gun_Motor
-      - 10: Gauge_Cryo
-      - 12: Valve_Oxygen
-      - 14: Valve_Argon
-      - 15: Julabo
+      - Type: Moxa-16
+      - Ports:
+          - 1: Terranova
+          - 2: Relay
+          - 3: Phymotion
+          - 4: Gauge_Main
+          - 6: Z_Motor
+          - 7: X_Motor
+          - 8: Gun_Motor
+          - 10: Gauge_Cryo
+          - 12: Valve_Oxygen
+          - 14: Valve_Argon
+          - 15: Julabo
 
   - Moxa 2:
-    - Type: Moxa-8
-    - Ports:
-        - 8: nXDS15i
+      - Type: Moxa-8
+      - Ports:
+          - 8: nXDS15i
 
   - USB to RS232:
-    - Type: USB
-    - Ports:
-      -
+      - Type: USB
+      - Ports:
+        -
