@@ -50,6 +50,20 @@ Devices:
       - Databits: 8
       - Timeout: 1
 
+  - Gauge_Main:
+      - Baudrate: 9600
+      - Parity: None
+      - Stopbits: 1
+      - Databits: 8
+      - Timeout: 0.5
+
+  - Gauge_Cryo:
+      - Baudrate: 9600
+      - Parity: None
+      - Stopbits: 1
+      - Databits: 8
+      - Timeout: 0.5
+
 Connections:
   - NOT CONNECTED:
     - Type: Not Connected
@@ -60,9 +74,11 @@ Connections:
       -  1: Terranova
       -  2: Relay
       -  3: Phymotion
+      -  4: Gauge_Main
       -  6: Z_Motor
       -  7: X_Motor
       -  8: Gun_Motor
+      - 10: Gauge_Cryo
 
   - Moxa 2:
     - Type: Moxa-8
