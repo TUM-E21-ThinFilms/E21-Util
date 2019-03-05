@@ -25,3 +25,5 @@ class Devices(object):
     DEVICE_GAUGE_MAIN_CHAMBER = 'Gauge_Main'
     DEVICE_GAUGE_CRYO = 'Gauge_Cryo'
     DEVICE_JULABO = 'Julabo'
+    DEVICE_LEAK_VALVE_ARGON = 'Valve_Argon'
+    DEVICE_LEAK_VALVE_OXYGEN = 'Valve_Oxygen'

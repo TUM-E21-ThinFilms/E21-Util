@@ -71,6 +71,19 @@ Devices:
       - Databits: 7
       - Timeout: 0.4
 
+  - Valve_Argon:
+      - Baudrate: 9600
+      - Parity: Even
+      - Stopbits: 1
+      - Databits: 7
+      - Timeout: 0.2
+
+  - Valve_Oxygen:
+      - Baudrate: 9600
+      - Parity: Even
+      - Stopbits: 1
+      - Databits: 7
+      - Timeout: 0.2
 
 Connections:
   - NOT CONNECTED:
@@ -87,6 +100,8 @@ Connections:
       -  7: X_Motor
       -  8: Gun_Motor
       - 10: Gauge_Cryo
+      - 12: Valve_Oxygen
+      - 14: Valve_Argon
       - 15: Julabo
 
   - Moxa 2:
