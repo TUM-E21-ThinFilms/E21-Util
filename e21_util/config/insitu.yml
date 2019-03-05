@@ -123,6 +123,8 @@ Connections:
   - Moxa 2:
       - Type: Moxa-8
       - Ports:
+          - 2: DC_Sputter_B
+          - 5: DC_Sputter_A
           - 8: nXDS15i
 
   - USB to RS232:
