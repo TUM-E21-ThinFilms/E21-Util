@@ -101,6 +101,14 @@ Devices:
       - Databits: 8
       - Timeout: 0.05
 
+  - Shutter:
+        - Baudrate: 9600
+        - Parity: None
+        - Stopbits: 1
+        - Databits: 8
+        - Timeout: 0.1
+
+
 Connections:
   - NOT CONNECTED:
       - Type: Not Connected
