@@ -127,6 +127,7 @@ Connections:
           - 12: Valve_Oxygen
           - 14: Valve_Argon
           - 15: Julabo
+          - 16: Shutter
 
   - Moxa 2:
       - Type: Moxa-8
