@@ -19,12 +19,17 @@ from e21_util.lock import InterProcessTransportLock
 
 try:
     import serial
+
+
     class AbstractSerial(serial.Serial):
         pass
 except:
     import serial.serialposix
+
+
     class AbstractSerial(serial.serialposix.Serial):
         pass
+
 
 class AbstractTransport(object):
     def read_until(self, delimiter):
@@ -102,6 +107,9 @@ class Serial(AbstractSerial, AbstractTransport):
         return data
 
     def read_until(self, delimiter):
+        if isinstance(delimiter, int):
+            delimiter = chr(delimiter)
+
         if delimiter in self._buffer:
             data, delimiter, self._buffer = self._buffer.partition(delimiter)
             return data + delimiter
