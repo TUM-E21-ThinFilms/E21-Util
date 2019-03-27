@@ -108,6 +108,13 @@ Devices:
         - Databits: 8
         - Timeout: 0.1
 
+  - Compressor:
+      - Baudrate: 9600
+      - Parity: None
+      - Stopbits: 1
+      - Databits: 8
+      - Timeout: 0.1
+
 
 Connections:
   - NOT CONNECTED:
@@ -124,6 +131,7 @@ Connections:
           - 7: X_Motor
           - 8: Gun_Motor
           - 10: Gauge_Cryo
+          - 11: Compressor
           - 12: Valve_Oxygen
           - 14: Valve_Argon
           - 15: Julabo
