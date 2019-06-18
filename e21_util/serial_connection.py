@@ -82,7 +82,7 @@ class Serial(AbstractSerial, AbstractTransport):
         elif isinstance(data, byte):
             pass
         else:
-            raise RuntimeError("Unknown data given")
+            raise TypeError("Unknown data given")
 
         ret = super(Serial, self).write(msg)
         self.flush()

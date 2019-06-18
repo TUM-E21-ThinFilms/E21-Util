@@ -22,6 +22,7 @@ class Devices(object):
     DEVICE_X_MOTOR = 'X_Motor'
     DEVICE_Z_MOTOR = 'Z_Motor'
     DEVICE_SCROLL = 'nXDS15i'
+    DEVICE_LAKESHORE = 'Lakeshore'
     DEVICE_GAUGE_MAIN_CHAMBER = 'Gauge_Main'
     DEVICE_GAUGE_CRYO = 'Gauge_Cryo'
     DEVICE_JULABO = 'Julabo'

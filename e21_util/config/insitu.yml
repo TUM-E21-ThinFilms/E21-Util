@@ -50,6 +50,13 @@ Devices:
       - Databits: 8
       - Timeout: 1
 
+  - Lakeshore:
+      - Baudrate: 57600
+      - Parity: Odd
+      - Stopbits: 1
+      - Databits: 7
+      - Timeout: 1
+
   - Gauge_Main:
       - Baudrate: 9600
       - Parity: None
@@ -115,7 +122,6 @@ Devices:
       - Databits: 8
       - Timeout: 0.5
 
-
 Connections:
   - NOT CONNECTED:
       - Type: Not Connected
@@ -145,6 +151,6 @@ Connections:
           - 8: nXDS15i
 
   - USB to RS232:
-      - Type: USB
-      - Ports:
-        -
+    - Type: USB
+    - Ports:
+      - 0: Lakeshore
