@@ -1,6 +1,6 @@
 Devices:
   - Cesar:
-      - Baudrate: 19200
+      - Baudrate: 115200
       - Parity: Odd
       - Stopbits: 1
       - Databits: 8

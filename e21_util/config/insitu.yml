@@ -50,6 +50,13 @@ Devices:
       - Databits: 8
       - Timeout: 1
 
+  - Lakeshore:
+      - Baudrate: 57600
+      - Parity: Odd
+      - Stopbits: 1
+      - Databits: 7
+      - Timeout: 1
+
 Connections:
   - NOT CONNECTED:
     - Type: Not Connected
@@ -72,4 +79,4 @@ Connections:
   - USB to RS232:
     - Type: USB
     - Ports:
-      -
+      - 0: Lakeshore

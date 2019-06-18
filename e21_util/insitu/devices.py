@@ -22,3 +22,4 @@ class Devices(object):
     DEVICE_X_MOTOR = 'X_Motor'
     DEVICE_Z_MOTOR = 'Z_Motor'
     DEVICE_SCROLL = 'nXDS15i'
+    DEVICE_LAKESHORE = 'Lakeshore'
