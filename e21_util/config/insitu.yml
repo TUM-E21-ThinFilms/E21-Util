@@ -57,24 +57,98 @@ Devices:
       - Databits: 7
       - Timeout: 1
 
+  - Gauge_Main:
+      - Baudrate: 9600
+      - Parity: None
+      - Stopbits: 1
+      - Databits: 8
+      - Timeout: 0.5
+
+  - Gauge_Cryo:
+      - Baudrate: 9600
+      - Parity: None
+      - Stopbits: 1
+      - Databits: 8
+      - Timeout: 0.5
+
+  - Julabo:
+      - Baudrate: 4800
+      - Parity: Even
+      - Stopbits: 1
+      - Databits: 7
+      - Timeout: 0.4
+
+  - Valve_Argon:
+      - Baudrate: 9600
+      - Parity: Even
+      - Stopbits: 1
+      - Databits: 7
+      - Timeout: 0.2
+
+  - Valve_Oxygen:
+      - Baudrate: 9600
+      - Parity: Even
+      - Stopbits: 1
+      - Databits: 7
+      - Timeout: 0.2
+
+  # ADL Device A
+  - DC_Sputter_A:
+      - Baudrate: 9600
+      - Parity: Even
+      - Stopbits: 1
+      - Databits: 8
+      - Timeout: 0.05
+
+  # ADL Device B
+  - DC_Sputter_B:
+      - Baudrate: 9600
+      - Parity: Even
+      - Stopbits: 1
+      - Databits: 8
+      - Timeout: 0.05
+
+  - Shutter:
+        - Baudrate: 9600
+        - Parity: None
+        - Stopbits: 1
+        - Databits: 8
+        - Timeout: 0.1
+
+  - Compressor:
+      - Baudrate: 9600
+      - Parity: None
+      - Stopbits: 1
+      - Databits: 8
+      - Timeout: 0.1
+
 Connections:
   - NOT CONNECTED:
-    - Type: Not Connected
+      - Type: Not Connected
 
   - Moxa 1:
-    - Type: Moxa-16
-    - Ports:
-      -  1: Terranova
-      -  2: Relay
-      -  3: Phymotion
-      -  6: Z_Motor
-      -  7: X_Motor
-      -  8: Gun_Motor
+      - Type: Moxa-16
+      - Ports:
+          - 1: Terranova
+          - 2: Relay
+          - 3: Phymotion
+          - 4: Gauge_Main
+          - 6: Z_Motor
+          - 7: X_Motor
+          - 8: Gun_Motor
+          - 10: Gauge_Cryo
+          - 11: Compressor
+          - 12: Valve_Oxygen
+          - 14: Valve_Argon
+          - 15: Julabo
+          - 16: Shutter
 
   - Moxa 2:
-    - Type: Moxa-8
-    - Ports:
-        - 8: nXDS15i
+      - Type: Moxa-8
+      - Ports:
+          - 2: DC_Sputter_B
+          - 5: DC_Sputter_A
+          - 8: nXDS15i
 
   - USB to RS232:
     - Type: USB
