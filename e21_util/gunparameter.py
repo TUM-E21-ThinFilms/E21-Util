@@ -16,15 +16,9 @@ class GunConfig(object):
     def get_differences(self):
         return [self._diff12, self._diff23, self._diff34]
 
-    def get_difference(self):
-        return self._diff
-
     def set_differences(self, differences):
         differences = list(map(abs, differences))
         self._diff12, self._diff23, self._diff34 = differences
-
-    def set_difference(self, value):
-        self._diff = value
 
     def get_absolute_gun_position(self):
         return self._pos_1
