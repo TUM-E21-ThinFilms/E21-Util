@@ -3,7 +3,7 @@ import ConfigParser
 
 class GunConfig(object):
     def __init__(self):
-        self._diff = 0
+        self._diff12, self._diff23, self._diff34 = 0, 0, 0
         self._tol = 0
         self._pos_1 = 0
 
@@ -13,8 +13,15 @@ class GunConfig(object):
     def set_tolerance(self, value):
         self._tol = value
 
+    def get_differences(self):
+        return [self._diff12, self._diff23, self._diff34]
+
     def get_difference(self):
         return self._diff
+
+    def set_differences(self, differences):
+        differences = list(map(abs, differences))
+        self._diff12, self._diff23, self._diff34 = differences
 
     def set_difference(self, value):
         self._diff = value
@@ -38,7 +45,8 @@ class GunConfigParser(object):
 
         config = GunConfig()
         config.set_tolerance(configparser.getint(self.SECTION, 'tolerance'))
-        config.set_difference(configparser.getint(self.SECTION, 'gun_difference'))
+        differences = [configparser.getint(self.SECTION, 'gun_difference_' + x) for x in ['1-2', '2-3', '3-4']]
+        config.set_differences(differences)
         config.set_absolute_gun_position(configparser.getint(self.SECTION, 'gun_1'))
         return config
 
@@ -46,15 +54,17 @@ class GunConfigParser(object):
         configparser = ConfigParser.RawConfigParser()
         configparser.add_section(self.SECTION)
         configparser.set(self.SECTION, 'tolerance', config.get_tolerance())
-        configparser.set(self.SECTION, 'gun_difference', config.get_difference())
         configparser.set(self.SECTION, 'gun_1', config.get_absolute_gun_position())
+        differences = config.get_differences()
+        configparser.set(self.SECTION, 'gun_difference_1-2', differences[0])
+        configparser.set(self.SECTION, 'gun_difference_2-3', differences[1])
+        configparser.set(self.SECTION, 'gun_difference_3-4', differences[2])
 
         with open(self._file, 'wb+') as file:
             configparser.write(file)
 
 
 class GunSelectionConfig(object):
-
     SPUTTER_DEVICE_ADL_A = 0
     SPUTTER_DEVICE_ADL_B = 1
     SPUTTER_DEVICE_TRUMPF_DC = 2
@@ -75,6 +85,7 @@ class GunSelectionConfig(object):
      2: Trump DC
      3: Trumpf RF
     """
+
     def get_gun_sputter(self, gun_number):
         self._validate_gun_number(gun_number)
         return self.gun_sputter[gun_number]
@@ -82,9 +93,11 @@ class GunSelectionConfig(object):
     def set_gun_sputter(self, gun_number, sputter):
         self._validate_gun_number(gun_number)
         self.gun_sputter[gun_number] = sputter
+
     """
      :return Returns the name of the material which is at gun position gun_number (as string)
     """
+
     def get_gun_target(self, gun_number):
         self._validate_gun_number(gun_number)
         return self.gun_target[gun_number]
@@ -105,8 +118,8 @@ class GunSelectionConfig(object):
 
     def set_gun_number(self, number):
         self.gun_number = number
-        self.gun_sputter = (number + 1)*[0]
-        self.gun_target = (number + 1)*[""]
+        self.gun_sputter = (number + 1) * [0]
+        self.gun_target = (number + 1) * [""]
 
 
 class GunSelectionConfigParser(object):
@@ -127,7 +140,7 @@ class GunSelectionConfigParser(object):
         config = GunSelectionConfig()
         config.set_gun_number(configparser.getint(self.SECTION, 'gun_number'))
 
-        for i in range(1, config.get_gun_number()+1):
+        for i in range(1, config.get_gun_number() + 1):
             config.set_gun_sputter(i, configparser.getint(self.SECTION, 'gun_' + str(i) + '_sputter'))
             config.set_gun_target(i, configparser.get(self.SECTION, 'gun_' + str(i) + '_target'))
 
@@ -137,7 +150,7 @@ class GunSelectionConfigParser(object):
         configparser = ConfigParser.RawConfigParser()
         configparser.add_section(self.SECTION)
         configparser.set(self.SECTION, 'gun_number', config.get_gun_number())
-        for i in range(1, config.get_gun_number()+1):
+        for i in range(1, config.get_gun_number() + 1):
             configparser.set(self.SECTION, 'gun_' + str(i) + '_sputter', config.get_gun_sputter(i))
             configparser.set(self.SECTION, 'gun_' + str(i) + '_target', config.get_gun_target(i))
 
